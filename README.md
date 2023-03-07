@@ -4,7 +4,7 @@
 
 <br>
 
-# [<b>>> Download Latest</b>]()
+# [<b>>> Download Latest</b>](https://github.com/o7q/DrawBot/releases/download/v1.0.0.0/DrawBot.exe)
 ### Welcome! DrawBot is a simple, universal drawing robot that works on nearly every game and program. (ex. Gartic Phone, Skribbl, Jackbox, Paint, etc.)
 
 ---
@@ -32,7 +32,7 @@ While drawing, you can push the **ESCAPE** key to abort the drawing process.
 <details>
 <summary><b>Step 1.</b> Select an image</summary>
 
-- **1.1.** Click the **Select Button** OR paste in a direct URL to an image (URLs are prioritized, if you are using a local image ensure the URL textbox is empty)
+- **1.1** Click the **Select Button** OR paste in a direct URL to an image (URLs are prioritized, if you are using a local image ensure the URL textbox is empty)
 
 </details>
 
@@ -40,7 +40,7 @@ While drawing, you can push the **ESCAPE** key to abort the drawing process.
 <summary><b>Step 2.</b> Define bounds</summary>
 
 
-- **2.1.** Click the **P1 Button** and then click on the **top-left** of your canvas where the image will be drawn, this will define the first point
+- **2.1** Click the **P1 Button** and then click on the **top-left** of your canvas where the image will be drawn, this will define the first point
 - **2.2** Click the **P2 Button** and then click on the **bottom-right** of your canvas where the image will be drawn, this will define the second point
 
 </details>
@@ -50,20 +50,20 @@ While drawing, you can push the **ESCAPE** key to abort the drawing process.
 
 - To create a preset
     - Note: *The preset system only saves the color and the coordinate of that color.*
-    - **3.1.** Click the **Add Color Button** and then click on a color on the visible color palette of the program/game
-    - **3.2.** Repeat step **3.1** until you have selected all of the colors you need (note: it does not matter in which order you select them, the program will automatically determine which color to use when drawing, also, you can click the **Reset Button** to restart the preset creation process)
-    - **3.3.** Name the preset by typing a name inside the textbox, click the **Save Button** to save it
+    - **3.1** Click the **Add Color Button** and then click on a color on the visible color palette of the program/game
+    - **3.2** Repeat step **3.1** until you have selected all of the colors you need (note: it does not matter in which order you select them, the program will automatically determine which color to use when drawing, also, you can click the **Reset Button** to restart the preset creation process)
+    - **3.3** Name the preset by typing a name inside the textbox, click the **Save Button** to save it
 - To load a preset
-    - **3.1.** Select a preset inside of the **Preset List**
-    - **3.2.** Click the **Load Button** to load the selected preset (note: click the **Delete Button** to delete the selected preset)
+    - **3.1** Select a preset inside of the **Preset List**
+    - **3.2** Click the **Load Button** to load the selected preset (note: click the **Delete Button** to delete the selected preset)
 
 </details>
 
 <details>
 <summary><b>Step 4.</b> Drawing</summary>
 
-- **4.1.** Determine the draw settings with the **Quality** and **Speed** sliders. Quality will increase the pixel density at the cost of slowness. Speed will increase speed, speeds too high can cause issues on some programs/games
-- **4.2.** Click the **Draw Button** to start! **Remember:** You can push the **ESCAPE** key to abort the drawing process.
+- **4.1** Determine the draw settings with the **Quality** and **Speed** sliders. Quality will increase the pixel density at the cost of slowness. Speed will increase speed, speeds too high can cause issues on some programs/games
+- **4.2** Click the **Draw Button** to start! **Remember:** You can push the **ESCAPE** key to abort the drawing process.
 
 </details>
 
