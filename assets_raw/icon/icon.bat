@@ -1,0 +1,1 @@
+ffmpeg -i icon_256x.png icon.ico
