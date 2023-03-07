@@ -1,1 +1,6 @@
 - Improve method for drawing images
+- Feature to add region of colors
+- Saving a new preset doesn't clear memory
+- Show what preset you have loaded
+- Option to preserve aspect ratio
+- Display which colors the user has already clicked on
