@@ -71,7 +71,7 @@
             this.startButton.Location = new System.Drawing.Point(6, 291);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(158, 50);
-            this.startButton.TabIndex = 1;
+            this.startButton.TabIndex = 17;
             this.startButton.Text = "Draw";
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.startButton_Click);
@@ -105,7 +105,7 @@
             this.pos1Label.Location = new System.Drawing.Point(118, 28);
             this.pos1Label.Name = "pos1Label";
             this.pos1Label.Size = new System.Drawing.Size(26, 12);
-            this.pos1Label.TabIndex = 4;
+            this.pos1Label.TabIndex = 0;
             this.pos1Label.Text = "(0, 0)";
             // 
             // pos2Label
@@ -115,7 +115,7 @@
             this.pos2Label.Location = new System.Drawing.Point(118, 47);
             this.pos2Label.Name = "pos2Label";
             this.pos2Label.Size = new System.Drawing.Size(26, 12);
-            this.pos2Label.TabIndex = 5;
+            this.pos2Label.TabIndex = 0;
             this.pos2Label.Text = "(0, 0)";
             // 
             // boundsLabel
@@ -125,7 +125,7 @@
             this.boundsLabel.Location = new System.Drawing.Point(117, 64);
             this.boundsLabel.Name = "boundsLabel";
             this.boundsLabel.Size = new System.Drawing.Size(32, 12);
-            this.boundsLabel.TabIndex = 6;
+            this.boundsLabel.TabIndex = 0;
             this.boundsLabel.Text = "(0, 0)";
             // 
             // configureImageLabel
@@ -135,7 +135,7 @@
             this.configureImageLabel.Location = new System.Drawing.Point(3, 9);
             this.configureImageLabel.Name = "configureImageLabel";
             this.configureImageLabel.Size = new System.Drawing.Size(129, 16);
-            this.configureImageLabel.TabIndex = 7;
+            this.configureImageLabel.TabIndex = 0;
             this.configureImageLabel.Text = "Configure Canvas";
             // 
             // registerColorButton
@@ -143,7 +143,7 @@
             this.registerColorButton.Location = new System.Drawing.Point(6, 101);
             this.registerColorButton.Name = "registerColorButton";
             this.registerColorButton.Size = new System.Drawing.Size(69, 26);
-            this.registerColorButton.TabIndex = 8;
+            this.registerColorButton.TabIndex = 4;
             this.registerColorButton.Text = "Add Color";
             this.registerColorButton.UseVisualStyleBackColor = true;
             this.registerColorButton.Click += new System.EventHandler(this.registerColorButton_Click);
@@ -153,7 +153,7 @@
             this.finalizeColorsButton.Location = new System.Drawing.Point(74, 127);
             this.finalizeColorsButton.Name = "finalizeColorsButton";
             this.finalizeColorsButton.Size = new System.Drawing.Size(43, 22);
-            this.finalizeColorsButton.TabIndex = 9;
+            this.finalizeColorsButton.TabIndex = 7;
             this.finalizeColorsButton.Text = "Save";
             this.finalizeColorsButton.UseVisualStyleBackColor = true;
             this.finalizeColorsButton.Click += new System.EventHandler(this.finalizeColorsButton_Click);
@@ -163,7 +163,7 @@
             this.finalizeColorsBox.Location = new System.Drawing.Point(7, 128);
             this.finalizeColorsBox.Name = "finalizeColorsBox";
             this.finalizeColorsBox.Size = new System.Drawing.Size(67, 20);
-            this.finalizeColorsBox.TabIndex = 10;
+            this.finalizeColorsBox.TabIndex = 6;
             this.finalizeColorsBox.Tag = "";
             // 
             // loadColorsButton
@@ -181,7 +181,7 @@
             this.speedBox.Location = new System.Drawing.Point(131, 169);
             this.speedBox.Name = "speedBox";
             this.speedBox.Size = new System.Drawing.Size(32, 20);
-            this.speedBox.TabIndex = 13;
+            this.speedBox.TabIndex = 15;
             this.speedBox.Text = "50";
             this.speedBox.TextChanged += new System.EventHandler(this.speedBox_TextChanged);
             // 
@@ -190,7 +190,7 @@
             this.qualityBox.Location = new System.Drawing.Point(95, 169);
             this.qualityBox.Name = "qualityBox";
             this.qualityBox.Size = new System.Drawing.Size(32, 20);
-            this.qualityBox.TabIndex = 14;
+            this.qualityBox.TabIndex = 13;
             this.qualityBox.Text = "50";
             this.qualityBox.TextChanged += new System.EventHandler(this.qualityBox_TextChanged);
             // 
@@ -200,7 +200,7 @@
             this.qualityLabel.Location = new System.Drawing.Point(91, 155);
             this.qualityLabel.Name = "qualityLabel";
             this.qualityLabel.Size = new System.Drawing.Size(39, 13);
-            this.qualityLabel.TabIndex = 15;
+            this.qualityLabel.TabIndex = 0;
             this.qualityLabel.Text = "Quality";
             // 
             // speedLabel
@@ -209,7 +209,7 @@
             this.speedLabel.Location = new System.Drawing.Point(127, 155);
             this.speedLabel.Name = "speedLabel";
             this.speedLabel.Size = new System.Drawing.Size(38, 13);
-            this.speedLabel.TabIndex = 16;
+            this.speedLabel.TabIndex = 0;
             this.speedLabel.Text = "Speed";
             // 
             // qualityBar
@@ -219,7 +219,7 @@
             this.qualityBar.Name = "qualityBar";
             this.qualityBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.qualityBar.Size = new System.Drawing.Size(45, 100);
-            this.qualityBar.TabIndex = 17;
+            this.qualityBar.TabIndex = 14;
             this.qualityBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.qualityBar.Value = 50;
             this.qualityBar.Scroll += new System.EventHandler(this.qualityBar_Scroll);
@@ -231,7 +231,7 @@
             this.speedBar.Name = "speedBar";
             this.speedBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.speedBar.Size = new System.Drawing.Size(45, 100);
-            this.speedBar.TabIndex = 18;
+            this.speedBar.TabIndex = 16;
             this.speedBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.speedBar.Value = 50;
             this.speedBar.Scroll += new System.EventHandler(this.speedBar_Scroll);
@@ -242,14 +242,14 @@
             this.colorsList.Location = new System.Drawing.Point(7, 169);
             this.colorsList.Name = "colorsList";
             this.colorsList.Size = new System.Drawing.Size(83, 95);
-            this.colorsList.TabIndex = 19;
+            this.colorsList.TabIndex = 10;
             // 
             // resetColorsButton
             // 
             this.resetColorsButton.Location = new System.Drawing.Point(74, 101);
             this.resetColorsButton.Name = "resetColorsButton";
             this.resetColorsButton.Size = new System.Drawing.Size(43, 26);
-            this.resetColorsButton.TabIndex = 20;
+            this.resetColorsButton.TabIndex = 5;
             this.resetColorsButton.Text = "Reset";
             this.resetColorsButton.UseVisualStyleBackColor = true;
             this.resetColorsButton.Click += new System.EventHandler(this.resetColorsButton_Click);
@@ -261,7 +261,7 @@
             this.colorLabel.Location = new System.Drawing.Point(115, 89);
             this.colorLabel.Name = "colorLabel";
             this.colorLabel.Size = new System.Drawing.Size(36, 12);
-            this.colorLabel.TabIndex = 21;
+            this.colorLabel.TabIndex = 0;
             this.colorLabel.Text = "(0, 0, 0)";
             // 
             // colorSquare
@@ -270,7 +270,7 @@
             this.colorSquare.Location = new System.Drawing.Point(117, 102);
             this.colorSquare.Name = "colorSquare";
             this.colorSquare.Size = new System.Drawing.Size(46, 46);
-            this.colorSquare.TabIndex = 22;
+            this.colorSquare.TabIndex = 0;
             // 
             // colorIndexLabel
             // 
@@ -279,7 +279,7 @@
             this.colorIndexLabel.Location = new System.Drawing.Point(115, 80);
             this.colorIndexLabel.Name = "colorIndexLabel";
             this.colorIndexLabel.Size = new System.Drawing.Size(34, 12);
-            this.colorIndexLabel.TabIndex = 23;
+            this.colorIndexLabel.TabIndex = 0;
             this.colorIndexLabel.Text = "Color 0";
             // 
             // deleteColorsButton
@@ -287,7 +287,7 @@
             this.deleteColorsButton.Location = new System.Drawing.Point(45, 264);
             this.deleteColorsButton.Name = "deleteColorsButton";
             this.deleteColorsButton.Size = new System.Drawing.Size(46, 21);
-            this.deleteColorsButton.TabIndex = 25;
+            this.deleteColorsButton.TabIndex = 12;
             this.deleteColorsButton.Text = "Delete";
             this.deleteColorsButton.UseVisualStyleBackColor = true;
             this.deleteColorsButton.Click += new System.EventHandler(this.deleteColorsButton_Click);
@@ -299,7 +299,7 @@
             this.createPresetLabel.Location = new System.Drawing.Point(4, 86);
             this.createPresetLabel.Name = "createPresetLabel";
             this.createPresetLabel.Size = new System.Drawing.Size(102, 16);
-            this.createPresetLabel.TabIndex = 26;
+            this.createPresetLabel.TabIndex = 0;
             this.createPresetLabel.Text = "Create Preset";
             // 
             // loadPresetLabel
@@ -309,7 +309,7 @@
             this.loadPresetLabel.Location = new System.Drawing.Point(3, 153);
             this.loadPresetLabel.Name = "loadPresetLabel";
             this.loadPresetLabel.Size = new System.Drawing.Size(91, 16);
-            this.loadPresetLabel.TabIndex = 27;
+            this.loadPresetLabel.TabIndex = 0;
             this.loadPresetLabel.Text = "Load Preset";
             // 
             // loadImageButton
@@ -317,7 +317,7 @@
             this.loadImageButton.Location = new System.Drawing.Point(6, 25);
             this.loadImageButton.Name = "loadImageButton";
             this.loadImageButton.Size = new System.Drawing.Size(46, 20);
-            this.loadImageButton.TabIndex = 28;
+            this.loadImageButton.TabIndex = 0;
             this.loadImageButton.Text = "Select";
             this.loadImageButton.UseVisualStyleBackColor = true;
             this.loadImageButton.Click += new System.EventHandler(this.loadImageButton_Click);
@@ -333,7 +333,7 @@
             this.imageLabel.Location = new System.Drawing.Point(4, 64);
             this.imageLabel.Name = "imageLabel";
             this.imageLabel.Size = new System.Drawing.Size(37, 12);
-            this.imageLabel.TabIndex = 32;
+            this.imageLabel.TabIndex = 0;
             this.imageLabel.Text = "IMAGE";
             this.imageLabel.TextChanged += new System.EventHandler(this.imageLabel_TextChanged);
             // 
@@ -345,7 +345,7 @@
             this.infoLabel.Location = new System.Drawing.Point(23, 340);
             this.infoLabel.Name = "infoLabel";
             this.infoLabel.Size = new System.Drawing.Size(121, 12);
-            this.infoLabel.TabIndex = 33;
+            this.infoLabel.TabIndex = 0;
             this.infoLabel.Text = "DrawBot v0.0.0 by o7q";
             // 
             // loadURLImageBox
@@ -353,7 +353,7 @@
             this.loadURLImageBox.Location = new System.Drawing.Point(7, 45);
             this.loadURLImageBox.Name = "loadURLImageBox";
             this.loadURLImageBox.Size = new System.Drawing.Size(83, 20);
-            this.loadURLImageBox.TabIndex = 34;
+            this.loadURLImageBox.TabIndex = 1;
             this.loadURLImageBox.TextChanged += new System.EventHandler(this.loadURLImageBox_TextChanged);
             // 
             // urlNoticeLabel
@@ -362,7 +362,7 @@
             this.urlNoticeLabel.Location = new System.Drawing.Point(51, 31);
             this.urlNoticeLabel.Name = "urlNoticeLabel";
             this.urlNoticeLabel.Size = new System.Drawing.Size(44, 13);
-            this.urlNoticeLabel.TabIndex = 35;
+            this.urlNoticeLabel.TabIndex = 0;
             this.urlNoticeLabel.Text = "or URL:";
             // 
             // areaLabel
@@ -372,7 +372,7 @@
             this.areaLabel.Location = new System.Drawing.Point(91, 64);
             this.areaLabel.Name = "areaLabel";
             this.areaLabel.Size = new System.Drawing.Size(26, 12);
-            this.areaLabel.TabIndex = 30;
+            this.areaLabel.TabIndex = 0;
             this.areaLabel.Text = "Size:";
             // 
             // program
