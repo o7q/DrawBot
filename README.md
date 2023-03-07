@@ -5,7 +5,7 @@
 <br>
 
 # [<b>>> Download Latest</b>](https://github.com/o7q/DrawBot/releases/download/v1.0.0.0/DrawBot.exe)
-### Welcome! DrawBot is a simple, universal drawing robot that works on nearly every game and program. (ex. Gartic Phone, Skribbl, Jackbox, Paint, etc.)
+### Welcome! DrawBot is a simple, versatile drawing robot that works in nearly every game and program. (ex. Gartic Phone, Skribbl, Jackbox, Paint, etc.)
 
 ---
 
