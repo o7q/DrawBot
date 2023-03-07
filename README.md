@@ -14,8 +14,8 @@
 ---
 
 # Overview
-DrawBot controls your mouse to artificially draw images on nearly any game or program.\
-It can be quickly configured with with its simple preset system.
+DrawBot controls your mouse to artificially draw images. It works on nearly every game and program.\
+It can be quickly configured with its simple preset system.
 
 This program was inspired by https://github.com/IV2FI/DrawBot.
 
