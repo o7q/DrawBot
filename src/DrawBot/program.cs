@@ -1,19 +1,25 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Data;
-using System.Linq;
 using System.Drawing;
-using System.Threading;
 using System.Diagnostics;
 using System.Windows.Forms;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace DrawBot
 {
     public partial class program : Form
     {
+        // configure mouse window events
+        public const int HT_CAPTION = 0x2;
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+
+        // grab dlls for mousedown
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImport("user32.dll")]
+        public static extern bool ReleaseCapture();
+
         // grab dlls for mouse controls
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
@@ -25,8 +31,8 @@ namespace DrawBot
         // abort drawing script
         [DllImport("user32.dll")]
         private static extern short GetAsyncKeyState(int vKey);
-        // 0x1B = esc
         // 0x01 = leftmouse
+        // 0x1B = esc
 
         private bool detectInput(int key)
         {
@@ -39,22 +45,16 @@ namespace DrawBot
             return false;
         }
 
-        // 0x01 stands for left Mouse click
-        // for different Virtual-Keys view list:
-        // https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-
-        const string version = "v1.0.0";
+        const string version = "v2.0.0";
 
         int x_region_start = 0;
         int y_region_start = 0;
         int x_region_end = 0;
         int y_region_end = 0;
 
-        int x_bound = 0;
-        int y_bound = 0;
-
         string colorsTemp = "";
         int colorsIndex = 0;
+        bool hasSavedPalette = false;
 
         public int[,] colorPalette { get; set; }
         int paletteAmount;
@@ -62,14 +62,16 @@ namespace DrawBot
         bool presetLoaded = false;
 
         string imagePath = "";
-        Image image;
+        Bitmap image;
 
         public program()
         {
             InitializeComponent();
 
+            titlebarLabel.Text = "DrawBot " + version;
             infoLabel.Text = "DrawBot " + version + " by o7q";
             imageLabel.Text = "";
+            colorsLabel.Text = "";
         }
 
         private void program_Load(object sender, EventArgs e)
@@ -80,9 +82,9 @@ namespace DrawBot
 
         private void startButton_Click(object sender, EventArgs e)
         {
-            if (x_region_start * x_region_end == 0)
+            if (x_region_start * x_region_end == 0 || y_region_start * y_region_end == 0)
             {
-                MessageBox.Show("Please configure your canvas bounds");
+                MessageBox.Show("Please define your canvas bounds");
                 return;
             }
 
@@ -92,40 +94,70 @@ namespace DrawBot
                 return;
             }
 
-            Thread.Sleep(500);
-
             TopMost = true;
 
             int quality_step = 500 / (Int32.Parse(qualityBox.Text) + 1);
             double speed = 0.1 / double.Parse(speedBox.Text);
 
-            x_bound = (x_region_end - x_region_start) / quality_step;
-            y_bound = (y_region_end - y_region_start) / quality_step;
+            int x_bound = (x_region_end - x_region_start) / quality_step;
+            int y_bound = (y_region_end - y_region_start) / quality_step;
 
             if (loadURLImageBox.Text == "")
-                image = new Bitmap(Image.FromFile(imagePath), new Size(x_bound, y_bound));
+                try
+                {
+                    image = new Bitmap(Image.FromFile(imagePath), new Size(x_bound, y_bound));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error loading local image\n\n" + ex);
+                }
             else
             {
-                var request = WebRequest.Create(loadURLImageBox.Text);
+                try
+                {
+                    var request = WebRequest.Create(loadURLImageBox.Text);
 
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
-                    image = new Bitmap(Bitmap.FromStream(stream), new Size(x_bound, y_bound));
+                    using (var response = request.GetResponse())
+                    using (var stream = response.GetResponseStream())
+                        image = new Bitmap(Bitmap.FromStream(stream), new Size(x_bound, y_bound));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error loading web image\n\n" + ex);
+                }
             }
 
+            int completeState = 0;
+            switch(algorithmComboBox.SelectedIndex)
+            {
+                case 0: completeState = drawUsingLayered(x_bound, y_bound, quality_step, speed); break;
+                case 1: completeState = drawUsingDynamic(x_bound, y_bound, quality_step, speed); break;
+            }
+
+            image.Dispose();
+            TopMost = false;
+
+            if (completeState == 1) return;
+
+            moveCursor(x_region_start, y_region_start);
+        }
+
+        // NOT FINISHED YET
+        private int drawUsingLayered(int x_bound, int y_bound, int quality_step, double speed)
+        {
             int area = x_bound * y_bound;
+
             int x_track = 0;
             int y_track = 0;
 
-            Cursor = new Cursor(Cursor.Current.Handle);
-            Cursor.Position = new Point(x_region_start, y_region_start);
+            moveCursor(x_region_start, y_region_start);
 
             for (int i = 0; i < area; i++)
             {
                 if (detectInput(0x1B) == true)
                 {
                     TopMost = false;
-                    return;
+                    return 1;
                 }
 
                 if (x_track == x_bound)
@@ -140,44 +172,141 @@ namespace DrawBot
                 int r, g, b;
                 using (Bitmap bmp = new Bitmap(image))
                 {
-                    Color clr = bmp.GetPixel(x_track, y_track);
+                    System.Drawing.Color clr = bmp.GetPixel(x_track, y_track);
                     r = clr.R;
                     g = clr.G;
                     b = clr.B;
                 }
 
-                int dist = 0;
-                int[,] colors = new int[paletteAmount, 6];
+                // Find closest color
+                int closestIndex = -1;
+                int closestDist = Int32.MaxValue;
                 for (int j = 0; j < paletteAmount; j++)
                 {
-                    dist = (int)Math.Sqrt(Math.Pow(r - colorPalette[j, 2], 2) + Math.Pow(g - colorPalette[j, 3], 2) + Math.Pow(b - colorPalette[j, 4], 2));
 
-                    colors[j, 0] = dist;
-                    for (int k = 0; k < 5; k++)
-                        colors[j, k + 1] = colorPalette[j, k];
+                    // Calculate distance to color
+                    int dist = getDist(r, colorPalette[j, 2], g, colorPalette[j, 3], b, colorPalette[j, 4]);
+
+                    // Update closest color
+                    if (dist < closestDist)
+                    {
+                        closestDist = dist;
+                        closestIndex = j;
+                    }
                 }
-
-                int[,] colorsSorted = colors.OrderBy(x => x[0]);
 
                 int x_track_temp = Cursor.Position.X;
                 int y_track_temp = Cursor.Position.Y;
 
-                Cursor = new Cursor(Cursor.Current.Handle);
-                Cursor.Position = new Point(colorsSorted[0, 1], colorsSorted[0, 2]);
-
+                moveCursor(colorPalette[closestIndex, 0], colorPalette[closestIndex, 1]);
                 clickCursor(speed);
 
-                Cursor = new Cursor(Cursor.Current.Handle);
-                Cursor.Position = new Point(x_track_temp + quality_step, y_track_temp);
+                MessageBox.Show("");
 
-
+                moveCursor(x_track_temp + quality_step, y_track_temp);
                 clickCursor(speed);
 
                 x_track++;
             }
 
-            image.Dispose();
-            TopMost = false;
+            return 0;
+        }
+
+        private int drawUsingDynamic(int x_bound, int y_bound, int quality_step, double speed)
+        {
+            int area = x_bound * y_bound;
+
+            // quantize image using 3d rgb distance
+            int x_pixel = 0;
+            int y_pixel = 0;
+
+            int[,] quantizedImage = new int[x_bound, y_bound];
+            for (int i = 0; i < area; i++)
+            {
+                if (x_pixel == x_bound)
+                {
+                    x_pixel = 0;
+                    y_pixel++;
+                }
+
+                System.Drawing.Color color = getColor(image, x_pixel, y_pixel);
+
+                // new color finding algorithm (thank you emmett!)
+                int nearestDist = Int32.MaxValue;
+                for (int j = 0; j < paletteAmount; j++)
+                {
+                    // calculate distance to color
+                    int dist = getDist(color.R, colorPalette[j, 2], color.G, colorPalette[j, 3], color.B, colorPalette[j, 4]);
+
+                    // update closest color
+                    if (dist < nearestDist)
+                        nearestDist = dist;
+                }
+                quantizedImage[x_pixel, y_pixel] = nearestDist;
+
+                x_pixel++;
+            }
+
+            moveCursor(x_region_start, y_region_start);
+
+            int colorIndex = 0;
+
+            for (int j = 0; j < paletteAmount; j++)
+            {
+                moveCursor(colorPalette[colorIndex, 0], colorPalette[colorIndex, 1]);
+                clickCursor(speed);
+
+                int x_index = 0;
+                int y_index = 0;
+
+                int mouseX_pos = x_region_start;
+                int mouseY_pos = y_region_start;
+
+                for (int i = 0; i < area; i++)
+                {
+
+                    if (detectInput(0x1B) == true) return 1;
+
+                    if (x_index == x_bound)
+                    {
+                        x_index = 0;
+                        y_index++;
+
+                        mouseX_pos = mouseX_pos - x_bound * quality_step;
+                        mouseY_pos = mouseY_pos + quality_step;
+                    }
+
+                    System.Drawing.Color color = getColor(image, x_index, y_index);
+                    int dist = getDist(color.R, colorPalette[colorIndex, 2], color.G, colorPalette[colorIndex, 3], color.B, colorPalette[colorIndex, 4]);
+
+                    if (dist == quantizedImage[x_index, y_index])
+                    {
+                        moveCursor(mouseX_pos, mouseY_pos);
+                        clickCursor(speed);
+                    }
+
+                    mouseX_pos += quality_step;
+                    x_index++;
+                }
+
+                colorIndex++;
+            }
+
+            return 0;
+        }
+
+        private System.Drawing.Color getColor(Bitmap img, int x, int y)
+        {
+            return img.GetPixel(x, y);
+        }
+        private int getDist(int r1, int r2, int g1, int g2, int b1, int b2)
+        {
+            return (int)Math.Sqrt(Math.Pow(r1 - r2, 2) + Math.Pow(g1 - g2, 2) + Math.Pow(b1 - b2, 2));
+        }
+        private void moveCursor(int x, int y)
+        {
+            Cursor = new Cursor(Cursor.Current.Handle);
+            Cursor.Position = new Point(x, y);
         }
         private void clickCursor(double wait)
         {
@@ -187,6 +316,11 @@ namespace DrawBot
 
             var sw = Stopwatch.StartNew();
             while (sw.ElapsedTicks < Math.Round(wait * Stopwatch.Frequency)) { }
+        }
+
+        private void closeButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         private void loadImageButton_Click(object sender, EventArgs e)
@@ -207,8 +341,8 @@ namespace DrawBot
 
         private void imageLabel_TextChanged(object sender, EventArgs e)
         {
-            if (imageLabel.Text.Length > 10)
-                imageLabel.Text = imageLabel.Text.Substring(imageLabel.Text.Length - 10);
+            if (imageLabel.Text.Length > 12)
+                imageLabel.Text = imageLabel.Text.Substring(imageLabel.Text.Length - 12);
         }
 
         private void regionStartButton_Click(object sender, EventArgs e)
@@ -235,50 +369,62 @@ namespace DrawBot
 
         private void registerColorButton_Click(object sender, EventArgs e)
         {
+            if (hasSavedPalette == true)
+            {
+                finalizeColorsBox.Text = "";
+                colorsTemp = "";
+                colorsIndex = 0;
+                colorIndexLabel.Text = "Color 0";
+                colorLabel.Text = "(0, 0, 0)";
+                colorSquare.BackColor = System.Drawing.Color.FromArgb(255, 0, 0, 0);
+
+                hasSavedPalette = false;
+            }
+
             TopMost = true;
             while (detectInput(0x01) == false) { }
 
             int x = Cursor.Position.X;
             int y = Cursor.Position.Y;
             var rgb = GetColorAt(x, y);
-            colorsTemp += x + "," + y + "," + rgb.Item1 + "," + rgb.Item2 + "," + rgb.Item3 + "|";
+            colorsTemp += "|" + x + "," + y + "," + rgb.Item1 + "," + rgb.Item2 + "," + rgb.Item3;
             colorsIndex++;
 
             colorIndexLabel.Text = "Color " + colorsIndex.ToString();
             colorLabel.Text = rgb.ToString();
-            colorSquare.BackColor = Color.FromArgb(255, rgb.Item1, rgb.Item2, rgb.Item3);
+            colorSquare.BackColor = System.Drawing.Color.FromArgb(255, rgb.Item1, rgb.Item2, rgb.Item3);
         }
 
-        private void resetColorsButton_Click(object sender, EventArgs e)
+        private void undoColorButton_Click(object sender, EventArgs e)
         {
-            colorsTemp = "";
-            colorsIndex = 0;
-            colorIndexLabel.Text = "Color 0";
+            if (colorsTemp == "") return;
+
+            colorsTemp = colorsTemp.Remove(colorsTemp.LastIndexOf('|'));
+            colorsIndex--;
+
+            colorIndexLabel.Text = "Color " + colorsIndex;
             colorLabel.Text = "(0, 0, 0)";
-            colorSquare.BackColor = Color.FromArgb(255, 0, 0, 0);
+            colorSquare.BackColor = System.Drawing.Color.FromArgb(255, 0, 0, 0);
         }
 
         private void finalizeColorsButton_Click(object sender, EventArgs e)
         {
             if (colorsTemp == "") return;
-            colorsTemp = colorsTemp.Remove(colorsTemp.Length - 1, 1);
-            string name = finalizeColorsBox.Text == "" ? "preset" + DateTime.Now.ToString("[Mdy-hms]") : finalizeColorsBox.Text;
+            colorsTemp = colorsTemp.Substring(1);
+            string name = finalizeColorsBox.Text == "" ? "preset" + DateTime.Now.ToString("Mdy-hms") : finalizeColorsBox.Text;
             File.WriteAllText("DrawBot\\presets\\" + name + ".palette", colorsTemp);
             refreshColorsList();
 
-            finalizeColorsBox.Text = "";
-            colorsTemp = "";
-            colorsIndex = 0;
-            colorIndexLabel.Text = "Color 0";
-            colorLabel.Text = "(0, 0, 0)";
-            colorSquare.BackColor = Color.FromArgb(255, 0, 0, 0);
+            hasSavedPalette = true;
         }
 
         private void loadColorsButton_Click(object sender, EventArgs e)
         {
             if (Directory.GetFiles("DrawBot\\presets", "*.*", SearchOption.TopDirectoryOnly).Length == 0) return;
 
-            string paletteFile = File.ReadAllText("DrawBot\\presets\\" + colorsList.SelectedItem + ".palette");
+            string paletteFilePath = "DrawBot\\presets\\" + colorsList.SelectedItem + ".palette";
+            string paletteFile = File.ReadAllText(paletteFilePath);
+
             string[] RGBpixel = paletteFile.Split('|');
             paletteAmount = RGBpixel.Length;
             colorPalette = new int[paletteFile.Length, 5];
@@ -289,6 +435,7 @@ namespace DrawBot
                     colorPalette[i, j] = Int32.Parse(value[j]);
             }
 
+            colorsLabel.Text = Path.GetFileNameWithoutExtension(paletteFilePath);
             presetLoaded = true;
         }
 
@@ -299,6 +446,7 @@ namespace DrawBot
             refreshColorsList();
             if (colorsList.Items.Count > 0) colorsList.SelectedIndex = 0;
 
+            colorsLabel.Text = "";
             presetLoaded = false;
         }
 
@@ -330,14 +478,22 @@ namespace DrawBot
             speedBox.Text = speedBar.Value.ToString();
         }
 
-        Tuple<int, int, int> GetColorAt(int x, int y)
+        private void program_MouseEnter(object sender, EventArgs e)
         {
-            Bitmap bmp = new Bitmap(1, 1);
-            Rectangle bounds = new Rectangle(x, y, 1, 1);
-            using (Graphics g = Graphics.FromImage(bmp))
-                g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
-            Color col = bmp.GetPixel(0, 0);
-            return Tuple.Create(Convert.ToInt32(col.R), Convert.ToInt32(col.G), Convert.ToInt32(col.B));
+            TopMost = false;
+        }
+
+        private void titlebarLabel_MouseDown(object sender, MouseEventArgs e)
+        {
+            moveForm(e);
+        }
+        private void titlebarPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            moveForm(e);
+        }
+        private void sidebarPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            moveForm(e);
         }
 
         private void refreshColorsList()
@@ -345,86 +501,27 @@ namespace DrawBot
             colorsList.Items.Clear();
             string[] paletteFiles = Directory.GetFiles("DrawBot\\presets", "*.palette");
             for (int i = 0; i < paletteFiles.Length; i++)
-            {
                 colorsList.Items.Add(Path.GetFileNameWithoutExtension(paletteFiles[i]));
-            }
         }
 
-        private void program_MouseEnter(object sender, EventArgs e)
+        Tuple<int, int, int> GetColorAt(int x, int y)
         {
-            TopMost = false;
+            Bitmap bmp = new Bitmap(1, 1);
+            Rectangle bounds = new Rectangle(x, y, 1, 1);
+            using (Graphics g = Graphics.FromImage(bmp))
+                g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
+            System.Drawing.Color col = bmp.GetPixel(0, 0);
+            return Tuple.Create(Convert.ToInt32(col.R), Convert.ToInt32(col.G), Convert.ToInt32(col.B));
         }
-    }
 
-    // CODE FORKED FROM:
-    // https://www.codeproject.com/Tips/166236/Sorting-a-Two-Dimensional-Array-in-Csharp
-    public static class MultiDimensionalArrayExtensions
-    {
-        /// <summary>
-        ///   Orders the two dimensional array by the provided key in the key selector.
-        /// </summary>
-        /// <typeparam name="T">The type of the source two-dimensional array.</typeparam>
-        /// <param name="source">The source two-dimensional array.</param>
-        /// <param name="keySelector">The selector to retrieve the column to sort on.</param>
-        /// <returns>A new two dimensional array sorted on the key.</returns>
-        public static T[,] OrderBy<T>(this T[,] source, Func<T[], T> keySelector)
+        // move form on mousedown function
+        private void moveForm(MouseEventArgs e)
         {
-            return source.ConvertToSingleDimension().OrderBy(keySelector).ConvertToMultiDimensional();
-        }
-        /// <summary>
-        ///   Orders the two dimensional array by the provided key in the key selector in descending order.
-        /// </summary>
-        /// <typeparam name="T">The type of the source two-dimensional array.</typeparam>
-        /// <param name="source">The source two-dimensional array.</param>
-        /// <param name="keySelector">The selector to retrieve the column to sort on.</param>
-        /// <returns>A new two dimensional array sorted on the key.</returns>
-        public static T[,] OrderByDescending<T>(this T[,] source, Func<T[], T> keySelector)
-        {
-            return source.ConvertToSingleDimension().
-                OrderByDescending(keySelector).ConvertToMultiDimensional();
-        }
-        /// <summary>
-        ///   Converts a two dimensional array to single dimensional array.
-        /// </summary>
-        /// <typeparam name="T">The type of the two dimensional array.</typeparam>
-        /// <param name="source">The source two dimensional array.</param>
-        /// <returns>The repackaged two dimensional array as a single dimension based on rows.</returns>
-        private static IEnumerable<T[]> ConvertToSingleDimension<T>(this T[,] source)
-        {
-            T[] arRow;
-
-            for (int row = 0; row < source.GetLength(0); ++row)
+            if (e.Button == MouseButtons.Left)
             {
-                arRow = new T[source.GetLength(1)];
-
-                for (int col = 0; col < source.GetLength(1); ++col)
-                    arRow[col] = source[row, col];
-
-                yield return arRow;
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
-        /// <summary>
-        ///   Converts a collection of rows from a two dimensional array back into a two dimensional array.
-        /// </summary>
-        /// <typeparam name="T">The type of the two dimensional array.</typeparam>
-        /// <param name="source">The source collection of rows to convert.</param>
-        /// <returns>The two dimensional array.</returns>
-        private static T[,] ConvertToMultiDimensional<T>(this IEnumerable<T[]> source)
-        {
-            T[,] twoDimensional;
-            T[][] arrayOfArray;
-            int numberofColumns;
-
-            arrayOfArray = source.ToArray();
-            numberofColumns = (arrayOfArray.Length > 0) ? arrayOfArray[0].Length : 0;
-            twoDimensional = new T[arrayOfArray.Length, numberofColumns];
-
-            for (int row = 0; row < arrayOfArray.GetLength(0); ++row)
-                for (int col = 0; col < numberofColumns; ++col)
-                    twoDimensional[row, col] = arrayOfArray[row][col];
-
-            return twoDimensional;
-        }
     }
-    //
 }
