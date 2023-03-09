@@ -5,7 +5,6 @@ namespace DrawBot
 {
     internal static class init
     {
-
         [STAThread]
         static void Main()
         {
