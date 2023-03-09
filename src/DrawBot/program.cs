@@ -110,6 +110,7 @@ namespace DrawBot
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error loading local image\n\n" + ex);
+                    return;
                 }
             else
             {
@@ -124,6 +125,7 @@ namespace DrawBot
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error loading web image\n\n" + ex);
+                    return;
                 }
             }
 
