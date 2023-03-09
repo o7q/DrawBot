@@ -72,6 +72,8 @@ namespace DrawBot
             infoLabel.Text = "DrawBot " + version + " by o7q";
             imageLabel.Text = "";
             colorsLabel.Text = "";
+
+            algorithmComboBox.SelectedIndex = 1;
         }
 
         private void program_Load(object sender, EventArgs e)
@@ -82,6 +84,12 @@ namespace DrawBot
 
         private void startButton_Click(object sender, EventArgs e)
         {
+            if (imageLabel.Text == "")
+            {
+                MessageBox.Show("Please select an image");
+                return;
+            }
+
             if (x_region_start * x_region_end == 0 || y_region_start * y_region_end == 0)
             {
                 MessageBox.Show("Please define your canvas bounds");
@@ -94,6 +102,12 @@ namespace DrawBot
                 return;
             }
 
+            if (algorithmComboBox.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please select a drawing method");
+                return;
+            }
+
             TopMost = true;
 
             int quality_step = 500 / (Int32.Parse(qualityBox.Text) + 1);
@@ -103,6 +117,7 @@ namespace DrawBot
             int y_bound = (y_region_end - y_region_start) / quality_step;
 
             if (loadURLImageBox.Text == "")
+            {
                 try
                 {
                     image = new Bitmap(Image.FromFile(imagePath), new Size(x_bound, y_bound));
@@ -112,6 +127,7 @@ namespace DrawBot
                     MessageBox.Show("Error loading local image\n\n" + ex);
                     return;
                 }
+            }
             else
             {
                 try
@@ -132,20 +148,18 @@ namespace DrawBot
             int completeState = 0;
             switch(algorithmComboBox.SelectedIndex)
             {
-                case 0: completeState = drawUsingLayered(x_bound, y_bound, quality_step, speed); break;
-                case 1: completeState = drawUsingDynamic(x_bound, y_bound, quality_step, speed); break;
+                case 0: completeState = drawUsingStrips(x_bound, y_bound, quality_step, speed); break;
+                case 1: completeState = drawUsingBlobs(x_bound, y_bound, quality_step, speed); break;
             }
 
             image.Dispose();
             TopMost = false;
 
             if (completeState == 1) return;
-
             moveCursor(x_region_start, y_region_start);
         }
 
-        // NOT FINISHED YET
-        private int drawUsingLayered(int x_bound, int y_bound, int quality_step, double speed)
+        private int drawUsingStrips(int x_bound, int y_bound, int quality_step, double speed)
         {
             int area = x_bound * y_bound;
 
@@ -153,6 +167,9 @@ namespace DrawBot
             int y_track = 0;
 
             moveCursor(x_region_start, y_region_start);
+
+            bool selectNew = true;
+            bool initialSelect = true;
 
             for (int i = 0; i < area; i++)
             {
@@ -162,6 +179,10 @@ namespace DrawBot
                     return 1;
                 }
 
+                Color colorNext = new Color();
+                if (x_track + 1 < x_bound)
+                    colorNext = getColor(image, x_track + 1, y_track);
+
                 if (x_track == x_bound)
                 {
                     Cursor = new Cursor(Cursor.Current.Handle);
@@ -169,25 +190,19 @@ namespace DrawBot
 
                     x_track = 0;
                     y_track++;
+
+                    colorNext = getColor(image, x_track + 1, y_track);
                 }
 
-                int r, g, b;
-                using (Bitmap bmp = new Bitmap(image))
-                {
-                    System.Drawing.Color clr = bmp.GetPixel(x_track, y_track);
-                    r = clr.R;
-                    g = clr.G;
-                    b = clr.B;
-                }
+                Color color = getColor(image, x_track, y_track);
 
                 // Find closest color
                 int closestIndex = -1;
                 int closestDist = Int32.MaxValue;
                 for (int j = 0; j < paletteAmount; j++)
                 {
-
                     // Calculate distance to color
-                    int dist = getDist(r, colorPalette[j, 2], g, colorPalette[j, 3], b, colorPalette[j, 4]);
+                    int dist = getDist(color.R, colorPalette[j, 2], color.G, colorPalette[j, 3], color.B, colorPalette[j, 4]);
 
                     // Update closest color
                     if (dist < closestDist)
@@ -200,13 +215,42 @@ namespace DrawBot
                 int x_track_temp = Cursor.Position.X;
                 int y_track_temp = Cursor.Position.Y;
 
-                moveCursor(colorPalette[closestIndex, 0], colorPalette[closestIndex, 1]);
-                clickCursor(speed);
+                if (initialSelect == true)
+                {
+                    moveCursor(colorPalette[closestIndex, 0], colorPalette[closestIndex, 1]);
+                    clickCursor(speed);
 
-                MessageBox.Show("");
+                    moveCursor(x_track_temp, y_track_temp);
 
-                moveCursor(x_track_temp + quality_step, y_track_temp);
-                clickCursor(speed);
+                    initialSelect = false;
+                }
+
+                if (color.R == colorNext.R && color.G == colorNext.G && color.B == colorNext.B)
+                {
+                    if (selectNew == true)
+                    {
+                        moveCursor(colorPalette[closestIndex, 0], colorPalette[closestIndex, 1]);
+                        clickCursor(speed);
+
+                        moveCursor(x_track_temp, y_track_temp);
+                    }
+
+                    selectNew = false;
+
+                    clickCursor(speed);
+                }
+                else
+                {
+                    moveCursor(colorPalette[closestIndex, 0], colorPalette[closestIndex, 1]);
+                    clickCursor(speed);
+
+                    moveCursor(x_track_temp, y_track_temp);
+                    clickCursor(speed);
+
+                    selectNew = true;
+                }
+
+                moveCursor(Cursor.Position.X + quality_step, Cursor.Position.Y);
 
                 x_track++;
             }
@@ -214,7 +258,7 @@ namespace DrawBot
             return 0;
         }
 
-        private int drawUsingDynamic(int x_bound, int y_bound, int quality_step, double speed)
+        private int drawUsingBlobs(int x_bound, int y_bound, int quality_step, double speed)
         {
             int area = x_bound * y_bound;
 
@@ -231,7 +275,7 @@ namespace DrawBot
                     y_pixel++;
                 }
 
-                System.Drawing.Color color = getColor(image, x_pixel, y_pixel);
+                Color color = getColor(image, x_pixel, y_pixel);
 
                 // new color finding algorithm (thank you emmett!)
                 int nearestDist = Int32.MaxValue;
@@ -253,6 +297,8 @@ namespace DrawBot
 
             int colorIndex = 0;
 
+            int[,] pixelIndex = new int[x_bound, y_bound];
+
             for (int j = 0; j < paletteAmount; j++)
             {
                 moveCursor(colorPalette[colorIndex, 0], colorPalette[colorIndex, 1]);
@@ -266,25 +312,26 @@ namespace DrawBot
 
                 for (int i = 0; i < area; i++)
                 {
-
                     if (detectInput(0x1B) == true) return 1;
 
                     if (x_index == x_bound)
                     {
-                        x_index = 0;
-                        y_index++;
-
                         mouseX_pos = mouseX_pos - x_bound * quality_step;
                         mouseY_pos = mouseY_pos + quality_step;
+
+                        x_index = 0;
+                        y_index++;
                     }
 
-                    System.Drawing.Color color = getColor(image, x_index, y_index);
+                    Color color = getColor(image, x_index, y_index);
                     int dist = getDist(color.R, colorPalette[colorIndex, 2], color.G, colorPalette[colorIndex, 3], color.B, colorPalette[colorIndex, 4]);
 
-                    if (dist == quantizedImage[x_index, y_index])
+                    if (dist == quantizedImage[x_index, y_index] && pixelIndex[x_index, y_index] == 0)
                     {
                         moveCursor(mouseX_pos, mouseY_pos);
                         clickCursor(speed);
+
+                        pixelIndex[x_index, y_index] = 1;
                     }
 
                     mouseX_pos += quality_step;
@@ -297,7 +344,7 @@ namespace DrawBot
             return 0;
         }
 
-        private System.Drawing.Color getColor(Bitmap img, int x, int y)
+        private Color getColor(Bitmap img, int x, int y)
         {
             return img.GetPixel(x, y);
         }
@@ -343,8 +390,8 @@ namespace DrawBot
 
         private void imageLabel_TextChanged(object sender, EventArgs e)
         {
-            if (imageLabel.Text.Length > 12)
-                imageLabel.Text = imageLabel.Text.Substring(imageLabel.Text.Length - 12);
+            if (imageLabel.Text.Length > 11)
+                imageLabel.Text = imageLabel.Text.Substring(imageLabel.Text.Length - 11);
         }
 
         private void regionStartButton_Click(object sender, EventArgs e)
@@ -378,7 +425,7 @@ namespace DrawBot
                 colorsIndex = 0;
                 colorIndexLabel.Text = "Color 0";
                 colorLabel.Text = "(0, 0, 0)";
-                colorSquare.BackColor = System.Drawing.Color.FromArgb(255, 0, 0, 0);
+                colorSquare.BackColor = Color.FromArgb(255, 0, 0, 0);
 
                 hasSavedPalette = false;
             }
@@ -394,7 +441,7 @@ namespace DrawBot
 
             colorIndexLabel.Text = "Color " + colorsIndex.ToString();
             colorLabel.Text = rgb.ToString();
-            colorSquare.BackColor = System.Drawing.Color.FromArgb(255, rgb.Item1, rgb.Item2, rgb.Item3);
+            colorSquare.BackColor = Color.FromArgb(255, rgb.Item1, rgb.Item2, rgb.Item3);
         }
 
         private void undoColorButton_Click(object sender, EventArgs e)
@@ -406,7 +453,7 @@ namespace DrawBot
 
             colorIndexLabel.Text = "Color " + colorsIndex;
             colorLabel.Text = "(0, 0, 0)";
-            colorSquare.BackColor = System.Drawing.Color.FromArgb(255, 0, 0, 0);
+            colorSquare.BackColor = Color.FromArgb(255, 0, 0, 0);
         }
 
         private void finalizeColorsButton_Click(object sender, EventArgs e)
@@ -512,7 +559,7 @@ namespace DrawBot
             Rectangle bounds = new Rectangle(x, y, 1, 1);
             using (Graphics g = Graphics.FromImage(bmp))
                 g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
-            System.Drawing.Color col = bmp.GetPixel(0, 0);
+            Color col = bmp.GetPixel(0, 0);
             return Tuple.Create(Convert.ToInt32(col.R), Convert.ToInt32(col.G), Convert.ToInt32(col.B));
         }
 

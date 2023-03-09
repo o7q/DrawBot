@@ -67,6 +67,7 @@
             this.closeButton = new System.Windows.Forms.Button();
             this.sidebarPanel = new System.Windows.Forms.Panel();
             this.algorithmComboBox = new System.Windows.Forms.ComboBox();
+            this.algorithmLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.qualityBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.speedBar)).BeginInit();
             this.titlebarPanel.SuspendLayout();
@@ -81,7 +82,7 @@
             this.startButton.Location = new System.Drawing.Point(16, 365);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(159, 50);
-            this.startButton.TabIndex = 16;
+            this.startButton.TabIndex = 18;
             this.startButton.Text = "Draw";
             this.startButton.UseVisualStyleBackColor = false;
             this.startButton.Click += new System.EventHandler(this.startButton_Click);
@@ -94,9 +95,9 @@
             this.regionStartButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
             this.regionStartButton.Location = new System.Drawing.Point(104, 41);
             this.regionStartButton.Name = "regionStartButton";
-            this.regionStartButton.Size = new System.Drawing.Size(26, 20);
+            this.regionStartButton.Size = new System.Drawing.Size(20, 20);
             this.regionStartButton.TabIndex = 3;
-            this.regionStartButton.Text = "P1";
+            this.regionStartButton.Text = "A";
             this.regionStartButton.UseVisualStyleBackColor = false;
             this.regionStartButton.Click += new System.EventHandler(this.regionStartButton_Click);
             // 
@@ -108,9 +109,9 @@
             this.regionEndButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
             this.regionEndButton.Location = new System.Drawing.Point(104, 60);
             this.regionEndButton.Name = "regionEndButton";
-            this.regionEndButton.Size = new System.Drawing.Size(26, 20);
+            this.regionEndButton.Size = new System.Drawing.Size(20, 20);
             this.regionEndButton.TabIndex = 4;
-            this.regionEndButton.Text = "P2";
+            this.regionEndButton.Text = "B";
             this.regionEndButton.UseVisualStyleBackColor = false;
             this.regionEndButton.Click += new System.EventHandler(this.regionEndButton_Click);
             // 
@@ -120,7 +121,7 @@
             this.pos1Label.BackColor = System.Drawing.Color.Transparent;
             this.pos1Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pos1Label.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(155)))), ((int)(((byte)(150)))));
-            this.pos1Label.Location = new System.Drawing.Point(130, 44);
+            this.pos1Label.Location = new System.Drawing.Point(124, 44);
             this.pos1Label.Name = "pos1Label";
             this.pos1Label.Size = new System.Drawing.Size(26, 12);
             this.pos1Label.TabIndex = 0;
@@ -132,7 +133,7 @@
             this.pos2Label.BackColor = System.Drawing.Color.Transparent;
             this.pos2Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pos2Label.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(155)))), ((int)(((byte)(150)))));
-            this.pos2Label.Location = new System.Drawing.Point(130, 63);
+            this.pos2Label.Location = new System.Drawing.Point(124, 63);
             this.pos2Label.Name = "pos2Label";
             this.pos2Label.Size = new System.Drawing.Size(26, 12);
             this.pos2Label.TabIndex = 0;
@@ -144,7 +145,7 @@
             this.boundsLabel.BackColor = System.Drawing.Color.Transparent;
             this.boundsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.boundsLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(205)))), ((int)(((byte)(175)))));
-            this.boundsLabel.Location = new System.Drawing.Point(129, 80);
+            this.boundsLabel.Location = new System.Drawing.Point(123, 80);
             this.boundsLabel.Name = "boundsLabel";
             this.boundsLabel.Size = new System.Drawing.Size(32, 12);
             this.boundsLabel.TabIndex = 0;
@@ -204,10 +205,10 @@
             this.loadColorsButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(35)))), ((int)(((byte)(50)))));
             this.loadColorsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.loadColorsButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
-            this.loadColorsButton.Location = new System.Drawing.Point(16, 301);
+            this.loadColorsButton.Location = new System.Drawing.Point(16, 327);
             this.loadColorsButton.Name = "loadColorsButton";
             this.loadColorsButton.Size = new System.Drawing.Size(44, 21);
-            this.loadColorsButton.TabIndex = 10;
+            this.loadColorsButton.TabIndex = 11;
             this.loadColorsButton.Text = "Load";
             this.loadColorsButton.UseVisualStyleBackColor = false;
             this.loadColorsButton.Click += new System.EventHandler(this.loadColorsButton_Click);
@@ -220,7 +221,7 @@
             this.speedBox.Location = new System.Drawing.Point(147, 208);
             this.speedBox.Name = "speedBox";
             this.speedBox.Size = new System.Drawing.Size(28, 20);
-            this.speedBox.TabIndex = 14;
+            this.speedBox.TabIndex = 15;
             this.speedBox.Text = "50";
             this.speedBox.TextChanged += new System.EventHandler(this.speedBox_TextChanged);
             // 
@@ -232,7 +233,7 @@
             this.qualityBox.Location = new System.Drawing.Point(112, 208);
             this.qualityBox.Name = "qualityBox";
             this.qualityBox.Size = new System.Drawing.Size(28, 20);
-            this.qualityBox.TabIndex = 12;
+            this.qualityBox.TabIndex = 13;
             this.qualityBox.Text = "50";
             this.qualityBox.TextChanged += new System.EventHandler(this.qualityBox_TextChanged);
             // 
@@ -264,8 +265,8 @@
             this.qualityBar.Maximum = 100;
             this.qualityBar.Name = "qualityBar";
             this.qualityBar.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.qualityBar.Size = new System.Drawing.Size(45, 100);
-            this.qualityBar.TabIndex = 13;
+            this.qualityBar.Size = new System.Drawing.Size(45, 90);
+            this.qualityBar.TabIndex = 14;
             this.qualityBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.qualityBar.Value = 50;
             this.qualityBar.Scroll += new System.EventHandler(this.qualityBar_Scroll);
@@ -277,8 +278,8 @@
             this.speedBar.Maximum = 100;
             this.speedBar.Name = "speedBar";
             this.speedBar.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.speedBar.Size = new System.Drawing.Size(45, 100);
-            this.speedBar.TabIndex = 15;
+            this.speedBar.Size = new System.Drawing.Size(45, 90);
+            this.speedBar.TabIndex = 16;
             this.speedBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.speedBar.Value = 50;
             this.speedBar.Scroll += new System.EventHandler(this.speedBar_Scroll);
@@ -291,8 +292,8 @@
             this.colorsList.FormattingEnabled = true;
             this.colorsList.Location = new System.Drawing.Point(16, 208);
             this.colorsList.Name = "colorsList";
-            this.colorsList.Size = new System.Drawing.Size(92, 93);
-            this.colorsList.TabIndex = 9;
+            this.colorsList.Size = new System.Drawing.Size(92, 119);
+            this.colorsList.TabIndex = 10;
             // 
             // undoColorButton
             // 
@@ -344,10 +345,10 @@
             this.deleteColorsButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(35)))), ((int)(((byte)(50)))));
             this.deleteColorsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.deleteColorsButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(75)))), ((int)(((byte)(100)))));
-            this.deleteColorsButton.Location = new System.Drawing.Point(60, 301);
+            this.deleteColorsButton.Location = new System.Drawing.Point(60, 327);
             this.deleteColorsButton.Name = "deleteColorsButton";
             this.deleteColorsButton.Size = new System.Drawing.Size(48, 21);
-            this.deleteColorsButton.TabIndex = 11;
+            this.deleteColorsButton.TabIndex = 12;
             this.deleteColorsButton.Text = "Delete";
             this.deleteColorsButton.UseVisualStyleBackColor = false;
             this.deleteColorsButton.Click += new System.EventHandler(this.deleteColorsButton_Click);
@@ -448,7 +449,7 @@
             this.areaLabel.BackColor = System.Drawing.Color.Transparent;
             this.areaLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.areaLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(205)))), ((int)(((byte)(175)))));
-            this.areaLabel.Location = new System.Drawing.Point(103, 80);
+            this.areaLabel.Location = new System.Drawing.Point(97, 80);
             this.areaLabel.Name = "areaLabel";
             this.areaLabel.Size = new System.Drawing.Size(26, 12);
             this.areaLabel.TabIndex = 0;
@@ -459,7 +460,7 @@
             this.colorsLabel.AutoSize = true;
             this.colorsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.colorsLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(205)))), ((int)(((byte)(175)))));
-            this.colorsLabel.Location = new System.Drawing.Point(13, 324);
+            this.colorsLabel.Location = new System.Drawing.Point(13, 350);
             this.colorsLabel.Name = "colorsLabel";
             this.colorsLabel.Size = new System.Drawing.Size(41, 12);
             this.colorsLabel.TabIndex = 0;
@@ -485,7 +486,7 @@
             this.titlebarLabel.Location = new System.Drawing.Point(9, 5);
             this.titlebarLabel.Name = "titlebarLabel";
             this.titlebarLabel.Size = new System.Drawing.Size(95, 13);
-            this.titlebarLabel.TabIndex = 1;
+            this.titlebarLabel.TabIndex = 0;
             this.titlebarLabel.Text = "DrawBot v0.0.0";
             this.titlebarLabel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.titlebarLabel_MouseDown);
             // 
@@ -507,22 +508,35 @@
             this.sidebarPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(50)))), ((int)(((byte)(75)))));
             this.sidebarPanel.Location = new System.Drawing.Point(-4, -4);
             this.sidebarPanel.Name = "sidebarPanel";
-            this.sidebarPanel.Size = new System.Drawing.Size(7, 415);
+            this.sidebarPanel.Size = new System.Drawing.Size(7, 443);
             this.sidebarPanel.TabIndex = 0;
             this.sidebarPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.sidebarPanel_MouseDown);
             // 
             // algorithmComboBox
             // 
+            this.algorithmComboBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(35)))), ((int)(((byte)(50)))));
             this.algorithmComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.algorithmComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.algorithmComboBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
             this.algorithmComboBox.FormattingEnabled = true;
             this.algorithmComboBox.Items.AddRange(new object[] {
-            "Layered",
-            "Dynamic"});
-            this.algorithmComboBox.Location = new System.Drawing.Point(16, 343);
+            "Strips (quality)",
+            "Blobs (fast)"});
+            this.algorithmComboBox.Location = new System.Drawing.Point(108, 327);
             this.algorithmComboBox.Name = "algorithmComboBox";
-            this.algorithmComboBox.Size = new System.Drawing.Size(159, 21);
+            this.algorithmComboBox.Size = new System.Drawing.Size(67, 20);
             this.algorithmComboBox.TabIndex = 17;
-            this.algorithmComboBox.Text = "Choose Algorithm";
+            // 
+            // algorithmLabel
+            // 
+            this.algorithmLabel.AutoSize = true;
+            this.algorithmLabel.BackColor = System.Drawing.Color.Transparent;
+            this.algorithmLabel.ForeColor = System.Drawing.Color.White;
+            this.algorithmLabel.Location = new System.Drawing.Point(108, 314);
+            this.algorithmLabel.Name = "algorithmLabel";
+            this.algorithmLabel.Size = new System.Drawing.Size(71, 13);
+            this.algorithmLabel.TabIndex = 0;
+            this.algorithmLabel.Text = "Draw Method";
             // 
             // program
             // 
@@ -531,7 +545,8 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.BackgroundImage = global::DrawBot.Properties.Resources.background_gradient;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(188, 456);
+            this.ClientSize = new System.Drawing.Size(188, 433);
+            this.Controls.Add(this.algorithmLabel);
             this.Controls.Add(this.algorithmComboBox);
             this.Controls.Add(this.sidebarPanel);
             this.Controls.Add(this.titlebarPanel);
@@ -624,6 +639,7 @@
         private System.Windows.Forms.Panel sidebarPanel;
         private System.Windows.Forms.Label titlebarLabel;
         private System.Windows.Forms.ComboBox algorithmComboBox;
+        private System.Windows.Forms.Label algorithmLabel;
     }
 }
 

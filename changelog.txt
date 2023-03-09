@@ -1,6 +1,8 @@
 ~
+- Improved UI
 - Greatly improved the efficiency of the drawing and color matching algorithms
 - Adding option to change which algorithm is used
 - Now when you save a new preset doesn't clear memory right away
 - Now shows what preset you have loaded
 - Fixed tab indexes
+- Minor bug fixes

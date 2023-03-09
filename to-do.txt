@@ -1,4 +1,2 @@
-- Optimize the layered algorithm
-- Feature to add region of colors
 - Option to preserve aspect ratio
 - Display which colors the user has already clicked on
