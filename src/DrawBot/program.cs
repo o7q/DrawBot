@@ -28,13 +28,12 @@ namespace DrawBot
         private const int MOUSEEVENTF_LEFTDOWN = 0x02;
         private const int MOUSEEVENTF_LEFTUP = 0x04;
 
-        // abort drawing script
+        // key detection script
         [DllImport("user32.dll")]
         private static extern short GetAsyncKeyState(int vKey);
         // 0x01 = leftmouse
         // 0x1B = esc
-
-        private bool detectInput(int key)
+        private bool keyDetect(int key)
         {
             short keyState = GetAsyncKeyState(key);
             bool keyPressed = ((keyState >> 15) & 0x0001) == 0x0001;
@@ -47,20 +46,23 @@ namespace DrawBot
 
         const string version = "v2.0.0";
 
+        // region
         int x_region_start = 0;
         int y_region_start = 0;
         int x_region_end = 0;
         int y_region_end = 0;
 
+        // preset creator
         string colorsTemp = "";
         int colorsIndex = 0;
         bool hasSavedPalette = false;
 
+        // palette storage
         public int[,] colorPalette { get; set; }
         int paletteAmount;
+        bool paletteLoaded = false;
 
-        bool presetLoaded = false;
-
+        // image
         string imagePath = "";
         Bitmap image;
 
@@ -68,11 +70,13 @@ namespace DrawBot
         {
             InitializeComponent();
 
+            // default labels
             titlebarLabel.Text = "DrawBot " + version;
             infoLabel.Text = "DrawBot " + version + " by o7q";
             imageLabel.Text = "";
             colorsLabel.Text = "";
-
+            
+            // select default algorithm
             algorithmComboBox.SelectedIndex = 1;
         }
 
@@ -96,7 +100,7 @@ namespace DrawBot
                 return;
             }
 
-            if (presetLoaded == false)
+            if (paletteLoaded == false)
             {
                 MessageBox.Show("Please select a color preset");
                 return;
@@ -118,6 +122,7 @@ namespace DrawBot
 
             if (loadURLImageBox.Text == "")
             {
+                // load local image
                 try
                 {
                     image = new Bitmap(Image.FromFile(imagePath), new Size(x_bound, y_bound));
@@ -130,6 +135,7 @@ namespace DrawBot
             }
             else
             {
+                // load web image
                 try
                 {
                     var request = WebRequest.Create(loadURLImageBox.Text);
@@ -166,23 +172,22 @@ namespace DrawBot
             int x_track = 0;
             int y_track = 0;
 
-            moveCursor(x_region_start, y_region_start);
-
             bool selectNew = true;
             bool initialSelect = true;
 
+            moveCursor(x_region_start, y_region_start);
+
             for (int i = 0; i < area; i++)
             {
-                if (detectInput(0x1B) == true)
-                {
-                    TopMost = false;
-                    return 1;
-                }
+                // abort draw
+                if (keyDetect(0x1B) == true) return 1;
 
+                // calculate future color
                 Color colorNext = new Color();
                 if (x_track + 1 < x_bound)
                     colorNext = getColor(image, x_track + 1, y_track);
 
+                // calculate next line
                 if (x_track == x_bound)
                 {
                     Cursor = new Cursor(Cursor.Current.Handle);
@@ -196,25 +201,36 @@ namespace DrawBot
 
                 Color color = getColor(image, x_track, y_track);
 
-                // Find closest color
+                // color matching algorithm (thank you emmett!)
                 int closestIndex = -1;
+                int closestIndexNext = -1;
                 int closestDist = Int32.MaxValue;
+                int closestDistNext = Int32.MaxValue;
                 for (int j = 0; j < paletteAmount; j++)
                 {
-                    // Calculate distance to color
+                    // calculate distance to color
                     int dist = getDist(color.R, colorPalette[j, 2], color.G, colorPalette[j, 3], color.B, colorPalette[j, 4]);
+                    int distNext = getDist(colorNext.R, colorPalette[j, 2], colorNext.G, colorPalette[j, 3], colorNext.B, colorPalette[j, 4]);
 
-                    // Update closest color
+                    // update closest color
                     if (dist < closestDist)
                     {
                         closestDist = dist;
                         closestIndex = j;
+                    }
+
+                    // update future closest color
+                    if (distNext < closestDistNext)
+                    {
+                        closestDistNext = distNext;
+                        closestIndexNext = j;
                     }
                 }
 
                 int x_track_temp = Cursor.Position.X;
                 int y_track_temp = Cursor.Position.Y;
 
+                // select first needed color
                 if (initialSelect == true)
                 {
                     moveCursor(colorPalette[closestIndex, 0], colorPalette[closestIndex, 1]);
@@ -225,8 +241,9 @@ namespace DrawBot
                     initialSelect = false;
                 }
 
-                if (color.R == colorNext.R && color.G == colorNext.G && color.B == colorNext.B)
+                if (closestIndex == closestIndexNext)
                 {
+                    // place pixel using same color
                     if (selectNew == true)
                     {
                         moveCursor(colorPalette[closestIndex, 0], colorPalette[closestIndex, 1]);
@@ -241,6 +258,7 @@ namespace DrawBot
                 }
                 else
                 {
+                    // place pixel using new color
                     moveCursor(colorPalette[closestIndex, 0], colorPalette[closestIndex, 1]);
                     clickCursor(speed);
 
@@ -262,10 +280,10 @@ namespace DrawBot
         {
             int area = x_bound * y_bound;
 
-            // quantize image using 3d rgb distance
             int x_pixel = 0;
             int y_pixel = 0;
 
+            // quantize image using 3d rgb distance
             int[,] quantizedImage = new int[x_bound, y_bound];
             for (int i = 0; i < area; i++)
             {
@@ -277,7 +295,7 @@ namespace DrawBot
 
                 Color color = getColor(image, x_pixel, y_pixel);
 
-                // new color finding algorithm (thank you emmett!)
+                // color matching algorithm (thank you emmett!)
                 int nearestDist = Int32.MaxValue;
                 for (int j = 0; j < paletteAmount; j++)
                 {
@@ -296,7 +314,6 @@ namespace DrawBot
             moveCursor(x_region_start, y_region_start);
 
             int colorIndex = 0;
-
             int[,] pixelIndex = new int[x_bound, y_bound];
 
             for (int j = 0; j < paletteAmount; j++)
@@ -312,8 +329,10 @@ namespace DrawBot
 
                 for (int i = 0; i < area; i++)
                 {
-                    if (detectInput(0x1B) == true) return 1;
+                    // abort draw
+                    if (keyDetect(0x1B) == true) return 1;
 
+                    // calculate new line
                     if (x_index == x_bound)
                     {
                         mouseX_pos = mouseX_pos - x_bound * quality_step;
@@ -326,6 +345,7 @@ namespace DrawBot
                     Color color = getColor(image, x_index, y_index);
                     int dist = getDist(color.R, colorPalette[colorIndex, 2], color.G, colorPalette[colorIndex, 3], color.B, colorPalette[colorIndex, 4]);
 
+                    // place blob pixel
                     if (dist == quantizedImage[x_index, y_index] && pixelIndex[x_index, y_index] == 0)
                     {
                         moveCursor(mouseX_pos, mouseY_pos);
@@ -397,7 +417,7 @@ namespace DrawBot
         private void regionStartButton_Click(object sender, EventArgs e)
         {
             TopMost = true;
-            while (detectInput(0x01) == false) { }
+            while (keyDetect(0x01) == false) { }
 
             x_region_start = Cursor.Position.X;
             y_region_start = Cursor.Position.Y;
@@ -408,7 +428,7 @@ namespace DrawBot
         private void regionEndButton_Click(object sender, EventArgs e)
         {
             TopMost = true;
-            while (detectInput(0x01) == false) { }
+            while (keyDetect(0x01) == false) { }
 
             x_region_end = Cursor.Position.X;
             y_region_end = Cursor.Position.Y;
@@ -431,7 +451,7 @@ namespace DrawBot
             }
 
             TopMost = true;
-            while (detectInput(0x01) == false) { }
+            while (keyDetect(0x01) == false) { }
 
             int x = Cursor.Position.X;
             int y = Cursor.Position.Y;
@@ -485,7 +505,7 @@ namespace DrawBot
             }
 
             colorsLabel.Text = Path.GetFileNameWithoutExtension(paletteFilePath);
-            presetLoaded = true;
+            paletteLoaded = true;
         }
 
         private void deleteColorsButton_Click(object sender, EventArgs e)
@@ -496,7 +516,7 @@ namespace DrawBot
             if (colorsList.Items.Count > 0) colorsList.SelectedIndex = 0;
 
             colorsLabel.Text = "";
-            presetLoaded = false;
+            paletteLoaded = false;
         }
 
         private void qualityBox_TextChanged(object sender, EventArgs e)
@@ -563,7 +583,6 @@ namespace DrawBot
             return Tuple.Create(Convert.ToInt32(col.R), Convert.ToInt32(col.G), Convert.ToInt32(col.B));
         }
 
-        // move form on mousedown function
         private void moveForm(MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
