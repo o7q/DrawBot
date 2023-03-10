@@ -82,7 +82,7 @@
             this.startButton.Location = new System.Drawing.Point(16, 365);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(159, 50);
-            this.startButton.TabIndex = 18;
+            this.startButton.TabIndex = 17;
             this.startButton.Text = "Draw";
             this.startButton.UseVisualStyleBackColor = false;
             this.startButton.Click += new System.EventHandler(this.startButton_Click);
@@ -181,10 +181,10 @@
             this.finalizeColorsButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(35)))), ((int)(((byte)(50)))));
             this.finalizeColorsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.finalizeColorsButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
-            this.finalizeColorsButton.Location = new System.Drawing.Point(85, 118);
+            this.finalizeColorsButton.Location = new System.Drawing.Point(85, 138);
             this.finalizeColorsButton.Name = "finalizeColorsButton";
             this.finalizeColorsButton.Size = new System.Drawing.Size(90, 26);
-            this.finalizeColorsButton.TabIndex = 7;
+            this.finalizeColorsButton.TabIndex = 8;
             this.finalizeColorsButton.Text = "Save";
             this.finalizeColorsButton.UseVisualStyleBackColor = false;
             this.finalizeColorsButton.Click += new System.EventHandler(this.finalizeColorsButton_Click);
@@ -194,10 +194,10 @@
             this.finalizeColorsBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(35)))), ((int)(((byte)(50)))));
             this.finalizeColorsBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.finalizeColorsBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
-            this.finalizeColorsBox.Location = new System.Drawing.Point(85, 144);
+            this.finalizeColorsBox.Location = new System.Drawing.Point(85, 118);
             this.finalizeColorsBox.Name = "finalizeColorsBox";
             this.finalizeColorsBox.Size = new System.Drawing.Size(90, 20);
-            this.finalizeColorsBox.TabIndex = 8;
+            this.finalizeColorsBox.TabIndex = 7;
             this.finalizeColorsBox.Tag = "";
             // 
             // loadColorsButton
@@ -208,7 +208,7 @@
             this.loadColorsButton.Location = new System.Drawing.Point(16, 327);
             this.loadColorsButton.Name = "loadColorsButton";
             this.loadColorsButton.Size = new System.Drawing.Size(44, 21);
-            this.loadColorsButton.TabIndex = 11;
+            this.loadColorsButton.TabIndex = 10;
             this.loadColorsButton.Text = "Load";
             this.loadColorsButton.UseVisualStyleBackColor = false;
             this.loadColorsButton.Click += new System.EventHandler(this.loadColorsButton_Click);
@@ -221,7 +221,7 @@
             this.speedBox.Location = new System.Drawing.Point(147, 208);
             this.speedBox.Name = "speedBox";
             this.speedBox.Size = new System.Drawing.Size(28, 20);
-            this.speedBox.TabIndex = 15;
+            this.speedBox.TabIndex = 14;
             this.speedBox.Text = "50";
             this.speedBox.TextChanged += new System.EventHandler(this.speedBox_TextChanged);
             // 
@@ -233,7 +233,7 @@
             this.qualityBox.Location = new System.Drawing.Point(112, 208);
             this.qualityBox.Name = "qualityBox";
             this.qualityBox.Size = new System.Drawing.Size(28, 20);
-            this.qualityBox.TabIndex = 13;
+            this.qualityBox.TabIndex = 12;
             this.qualityBox.Text = "50";
             this.qualityBox.TextChanged += new System.EventHandler(this.qualityBox_TextChanged);
             // 
@@ -266,7 +266,7 @@
             this.qualityBar.Name = "qualityBar";
             this.qualityBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.qualityBar.Size = new System.Drawing.Size(45, 90);
-            this.qualityBar.TabIndex = 14;
+            this.qualityBar.TabIndex = 13;
             this.qualityBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.qualityBar.Value = 50;
             this.qualityBar.Scroll += new System.EventHandler(this.qualityBar_Scroll);
@@ -279,7 +279,7 @@
             this.speedBar.Name = "speedBar";
             this.speedBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.speedBar.Size = new System.Drawing.Size(45, 90);
-            this.speedBar.TabIndex = 16;
+            this.speedBar.TabIndex = 15;
             this.speedBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.speedBar.Value = 50;
             this.speedBar.Scroll += new System.EventHandler(this.speedBar_Scroll);
@@ -293,7 +293,7 @@
             this.colorsList.Location = new System.Drawing.Point(16, 208);
             this.colorsList.Name = "colorsList";
             this.colorsList.Size = new System.Drawing.Size(92, 119);
-            this.colorsList.TabIndex = 10;
+            this.colorsList.TabIndex = 9;
             // 
             // undoColorButton
             // 
@@ -348,7 +348,7 @@
             this.deleteColorsButton.Location = new System.Drawing.Point(60, 327);
             this.deleteColorsButton.Name = "deleteColorsButton";
             this.deleteColorsButton.Size = new System.Drawing.Size(48, 21);
-            this.deleteColorsButton.TabIndex = 12;
+            this.deleteColorsButton.TabIndex = 11;
             this.deleteColorsButton.Text = "Delete";
             this.deleteColorsButton.UseVisualStyleBackColor = false;
             this.deleteColorsButton.Click += new System.EventHandler(this.deleteColorsButton_Click);
@@ -525,7 +525,7 @@
             this.algorithmComboBox.Location = new System.Drawing.Point(108, 327);
             this.algorithmComboBox.Name = "algorithmComboBox";
             this.algorithmComboBox.Size = new System.Drawing.Size(67, 20);
-            this.algorithmComboBox.TabIndex = 17;
+            this.algorithmComboBox.TabIndex = 16;
             // 
             // algorithmLabel
             // 

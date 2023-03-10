@@ -1,8 +1,8 @@
-~
+~ v2.0.0.0
 - Greatly improved the efficiency of the drawing and color matching algorithms
-- Improved UI
-- Adding option to change which algorithm is used
-- Now shows what preset you have loaded
-- Now when you save a new preset doesn't clear memory right away
-- Fixed tab indexes
+- New UI Look
+	- UI shows more info
+	- Fixed tab indexes
+- Added option to change which algorithm is used
+- Saving a new preset doesn't clear it from memory
 - Minor bug fixes

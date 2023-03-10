@@ -202,28 +202,28 @@ namespace DrawBot
                 Color color = getColor(image, x_track, y_track);
 
                 // color matching algorithm (thank you emmett!)
-                int closestIndex = -1;
-                int closestIndexNext = -1;
-                int closestDist = Int32.MaxValue;
-                int closestDistNext = Int32.MaxValue;
+                int nearestIndex = -1;
+                int nearestIndexNext = -1;
+                int nearestDist = Int32.MaxValue;
+                int nearestDistNext = Int32.MaxValue;
                 for (int j = 0; j < paletteAmount; j++)
                 {
                     // calculate distance to color
                     int dist = getDist(color.R, colorPalette[j, 2], color.G, colorPalette[j, 3], color.B, colorPalette[j, 4]);
                     int distNext = getDist(colorNext.R, colorPalette[j, 2], colorNext.G, colorPalette[j, 3], colorNext.B, colorPalette[j, 4]);
 
-                    // update closest color
-                    if (dist < closestDist)
+                    // update nearest color
+                    if (dist < nearestDist)
                     {
-                        closestDist = dist;
-                        closestIndex = j;
+                        nearestDist = dist;
+                        nearestIndex = j;
                     }
 
-                    // update future closest color
-                    if (distNext < closestDistNext)
+                    // update future nearest color
+                    if (distNext < nearestDistNext)
                     {
-                        closestDistNext = distNext;
-                        closestIndexNext = j;
+                        nearestDistNext = distNext;
+                        nearestIndexNext = j;
                     }
                 }
 
@@ -233,7 +233,7 @@ namespace DrawBot
                 // select first needed color
                 if (initialSelect == true)
                 {
-                    moveCursor(colorPalette[closestIndex, 0], colorPalette[closestIndex, 1]);
+                    moveCursor(colorPalette[nearestIndex, 0], colorPalette[nearestIndex, 1]);
                     clickCursor(speed);
 
                     moveCursor(x_track_temp, y_track_temp);
@@ -241,17 +241,16 @@ namespace DrawBot
                     initialSelect = false;
                 }
 
-                if (closestIndex == closestIndexNext)
+                if (nearestIndex == nearestIndexNext)
                 {
                     // place pixel using same color
                     if (selectNew == true)
                     {
-                        moveCursor(colorPalette[closestIndex, 0], colorPalette[closestIndex, 1]);
+                        moveCursor(colorPalette[nearestIndex, 0], colorPalette[nearestIndex, 1]);
                         clickCursor(speed);
 
                         moveCursor(x_track_temp, y_track_temp);
                     }
-
                     selectNew = false;
 
                     clickCursor(speed);
@@ -259,7 +258,7 @@ namespace DrawBot
                 else
                 {
                     // place pixel using new color
-                    moveCursor(colorPalette[closestIndex, 0], colorPalette[closestIndex, 1]);
+                    moveCursor(colorPalette[nearestIndex, 0], colorPalette[nearestIndex, 1]);
                     clickCursor(speed);
 
                     moveCursor(x_track_temp, y_track_temp);
@@ -440,11 +439,10 @@ namespace DrawBot
         {
             if (hasSavedPalette == true)
             {
-                finalizeColorsBox.Text = "";
                 colorsTemp = "";
                 colorsIndex = 0;
-                colorIndexLabel.Text = "Color 0";
-                colorLabel.Text = "(0, 0, 0)";
+                colorIndexLabel.Text = "Color 0"; colorIndexLabel.Refresh();
+                colorLabel.Text = "(0, 0, 0)"; colorLabel.Refresh();
                 colorSquare.BackColor = Color.FromArgb(255, 0, 0, 0);
 
                 hasSavedPalette = false;
@@ -484,6 +482,7 @@ namespace DrawBot
             File.WriteAllText("DrawBot\\presets\\" + name + ".palette", colorsTemp);
             refreshColorsList();
 
+            finalizeColorsBox.Text = "";
             hasSavedPalette = true;
         }
 
