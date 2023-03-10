@@ -1,6 +1,6 @@
 <img src="assets/images/banner.png">
 
-# [<b>>> Download Latest</b>]()
+# [<b>>> Download Latest</b>](https://github.com/o7q/DrawBot/releases/download/v2.0.0.0/DrawBot.exe)
 ### Welcome! DrawBot is a simple, versatile drawing robot that works in nearly every game and program. (ex. Gartic Phone, Skribbl, Jackbox, Paint, etc.)
 
 ---
