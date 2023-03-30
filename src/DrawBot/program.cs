@@ -185,7 +185,7 @@ namespace DrawBot
                 // calculate future color
                 Color colorNext = new Color();
                 if (x_track + 1 < x_bound)
-                    colorNext = getColor(image, x_track + 1, y_track);
+                    colorNext = image.GetPixel(x_track + 1, y_track);
 
                 // calculate next line
                 if (x_track == x_bound)
@@ -196,10 +196,10 @@ namespace DrawBot
                     x_track = 0;
                     y_track++;
 
-                    colorNext = getColor(image, x_track + 1, y_track);
+                    colorNext = image.GetPixel(x_track + 1, y_track);
                 }
 
-                Color color = getColor(image, x_track, y_track);
+                Color color = image.GetPixel(x_track, y_track);
 
                 // color matching algorithm (thank you emmett!)
                 int nearestIndex = -1;
@@ -292,7 +292,7 @@ namespace DrawBot
                     y_pixel++;
                 }
 
-                Color color = getColor(image, x_pixel, y_pixel);
+                Color color = image.GetPixel(x_pixel, y_pixel);
 
                 // color matching algorithm (thank you emmett!)
                 int nearestDist = Int32.MaxValue;
@@ -341,7 +341,7 @@ namespace DrawBot
                         y_index++;
                     }
 
-                    Color color = getColor(image, x_index, y_index);
+                    Color color = image.GetPixel(x_index, y_index);
                     int dist = getDist(color.R, colorPalette[colorIndex, 2], color.G, colorPalette[colorIndex, 3], color.B, colorPalette[colorIndex, 4]);
 
                     // place blob pixel
@@ -363,13 +363,14 @@ namespace DrawBot
             return 0;
         }
 
-        private Color getColor(Bitmap img, int x, int y)
-        {
-            return img.GetPixel(x, y);
-        }
         private int getDist(int r1, int r2, int g1, int g2, int b1, int b2)
         {
-            return (int)Math.Sqrt(Math.Pow(r1 - r2, 2) + Math.Pow(g1 - g2, 2) + Math.Pow(b1 - b2, 2));
+            return (int)Math.Sqrt
+            (
+                Math.Pow(r1 - r2, 2) +
+                Math.Pow(g1 - g2, 2) +
+                Math.Pow(b1 - b2, 2)
+            );
         }
         private void moveCursor(int x, int y)
         {
