@@ -57,8 +57,13 @@ namespace DrawBot
         int colorsIndex = 0;
         bool hasSavedPalette = false;
 
+        public struct rgbInfo
+        {
+            public int x, y, r, g, b;
+        }
+
         // palette storage
-        public int[,] colorPalette { get; set; }
+        public rgbInfo[] colorPalette { get; set; }
         int paletteAmount;
         bool paletteLoaded = false;
 
@@ -209,8 +214,8 @@ namespace DrawBot
                 for (int j = 0; j < paletteAmount; j++)
                 {
                     // calculate distance to color
-                    int dist = getDist(color.R, colorPalette[j, 2], color.G, colorPalette[j, 3], color.B, colorPalette[j, 4]);
-                    int distNext = getDist(colorNext.R, colorPalette[j, 2], colorNext.G, colorPalette[j, 3], colorNext.B, colorPalette[j, 4]);
+                    int dist = getDist(color.R, colorPalette[j].r, color.G, colorPalette[j].g, color.B, colorPalette[j].b);
+                    int distNext = getDist(colorNext.R, colorPalette[j].r, colorNext.G, colorPalette[j].g, colorNext.B, colorPalette[j].b);
 
                     // update nearest color
                     if (dist < nearestDist)
@@ -233,7 +238,7 @@ namespace DrawBot
                 // select first needed color
                 if (initialSelect == true)
                 {
-                    moveCursor(colorPalette[nearestIndex, 0], colorPalette[nearestIndex, 1]);
+                    moveCursor(colorPalette[nearestIndex].x, colorPalette[nearestIndex].y);
                     clickCursor(speed);
 
                     moveCursor(x_track_temp, y_track_temp);
@@ -246,7 +251,7 @@ namespace DrawBot
                     // place pixel using same color
                     if (selectNew == true)
                     {
-                        moveCursor(colorPalette[nearestIndex, 0], colorPalette[nearestIndex, 1]);
+                        moveCursor(colorPalette[nearestIndex].x, colorPalette[nearestIndex].y);
                         clickCursor(speed);
 
                         moveCursor(x_track_temp, y_track_temp);
@@ -258,7 +263,7 @@ namespace DrawBot
                 else
                 {
                     // place pixel using new color
-                    moveCursor(colorPalette[nearestIndex, 0], colorPalette[nearestIndex, 1]);
+                    moveCursor(colorPalette[nearestIndex].x, colorPalette[nearestIndex].y);
                     clickCursor(speed);
 
                     moveCursor(x_track_temp, y_track_temp);
@@ -299,7 +304,7 @@ namespace DrawBot
                 for (int j = 0; j < paletteAmount; j++)
                 {
                     // calculate distance to color
-                    int dist = getDist(color.R, colorPalette[j, 2], color.G, colorPalette[j, 3], color.B, colorPalette[j, 4]);
+                    int dist = getDist(color.R, colorPalette[j].r, color.G, colorPalette[j].g, color.B, colorPalette[j].b);
 
                     // update closest color
                     if (dist < nearestDist)
@@ -317,7 +322,7 @@ namespace DrawBot
 
             for (int j = 0; j < paletteAmount; j++)
             {
-                moveCursor(colorPalette[colorIndex, 0], colorPalette[colorIndex, 1]);
+                moveCursor(colorPalette[colorIndex].x, colorPalette[colorIndex].y);
                 clickCursor(speed);
 
                 int x_index = 0;
@@ -342,7 +347,7 @@ namespace DrawBot
                     }
 
                     Color color = image.GetPixel(x_index, y_index);
-                    int dist = getDist(color.R, colorPalette[colorIndex, 2], color.G, colorPalette[colorIndex, 3], color.B, colorPalette[colorIndex, 4]);
+                    int dist = getDist(color.R, colorPalette[colorIndex].r, color.G, colorPalette[colorIndex].g, color.B, colorPalette[colorIndex].b);
 
                     // place blob pixel
                     if (dist == quantizedImage[x_index, y_index] && pixelIndex[x_index, y_index] == 0)
@@ -496,12 +501,20 @@ namespace DrawBot
 
             string[] RGBpixel = paletteFile.Split('|');
             paletteAmount = RGBpixel.Length;
-            colorPalette = new int[paletteFile.Length, 5];
+            colorPalette = new rgbInfo[paletteFile.Length];
             for (int i = 0; i < RGBpixel.Length; i++)
             {
                 string[] value = RGBpixel[i].Split(',');
+
+                int[] valueInt = new int[5];
                 for (int j = 0; j < 5; j++)
-                    colorPalette[i, j] = Int32.Parse(value[j]);
+                    valueInt[j] = Int32.Parse(value[j]);
+
+                colorPalette[i].x = valueInt[0];
+                colorPalette[i].y = valueInt[1];
+                colorPalette[i].r = valueInt[2];
+                colorPalette[i].g = valueInt[3];
+                colorPalette[i].b = valueInt[4];
             }
 
             colorsLabel.Text = Path.GetFileNameWithoutExtension(paletteFilePath);
