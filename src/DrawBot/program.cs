@@ -57,13 +57,13 @@ namespace DrawBot
         int colorsIndex = 0;
         bool hasSavedPalette = false;
 
-        public struct rgbInfo
+        public struct colorInfo
         {
             public int x, y, r, g, b;
         }
 
         // palette storage
-        public rgbInfo[] colorPalette { get; set; }
+        public colorInfo[] colorPalette { get; set; }
         int paletteAmount;
         bool paletteLoaded = false;
 
@@ -501,7 +501,7 @@ namespace DrawBot
 
             string[] RGBpixel = paletteFile.Split('|');
             paletteAmount = RGBpixel.Length;
-            colorPalette = new rgbInfo[paletteFile.Length];
+            colorPalette = new colorInfo[paletteFile.Length];
             for (int i = 0; i < RGBpixel.Length; i++)
             {
                 string[] value = RGBpixel[i].Split(',');
