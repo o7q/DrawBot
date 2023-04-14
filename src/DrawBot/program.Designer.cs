@@ -68,6 +68,7 @@
             this.sidebarPanel = new System.Windows.Forms.Panel();
             this.algorithmComboBox = new System.Windows.Forms.ComboBox();
             this.algorithmLabel = new System.Windows.Forms.Label();
+            this.luminanceFixCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.qualityBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.speedBar)).BeginInit();
             this.titlebarPanel.SuspendLayout();
@@ -79,10 +80,10 @@
             this.startButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.startButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.startButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
-            this.startButton.Location = new System.Drawing.Point(16, 365);
+            this.startButton.Location = new System.Drawing.Point(16, 376);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(159, 50);
-            this.startButton.TabIndex = 17;
+            this.startButton.TabIndex = 18;
             this.startButton.Text = "Draw";
             this.startButton.UseVisualStyleBackColor = false;
             this.startButton.Click += new System.EventHandler(this.startButton_Click);
@@ -191,7 +192,7 @@
             // 
             // finalizeColorsBox
             // 
-            this.finalizeColorsBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(35)))), ((int)(((byte)(50)))));
+            this.finalizeColorsBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(50)))));
             this.finalizeColorsBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.finalizeColorsBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
             this.finalizeColorsBox.Location = new System.Drawing.Point(85, 118);
@@ -205,7 +206,7 @@
             this.loadColorsButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(35)))), ((int)(((byte)(50)))));
             this.loadColorsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.loadColorsButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
-            this.loadColorsButton.Location = new System.Drawing.Point(16, 327);
+            this.loadColorsButton.Location = new System.Drawing.Point(16, 340);
             this.loadColorsButton.Name = "loadColorsButton";
             this.loadColorsButton.Size = new System.Drawing.Size(44, 21);
             this.loadColorsButton.TabIndex = 10;
@@ -261,6 +262,7 @@
             // 
             // qualityBar
             // 
+            this.qualityBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(43)))), ((int)(((byte)(56)))));
             this.qualityBar.Location = new System.Drawing.Point(110, 228);
             this.qualityBar.Maximum = 100;
             this.qualityBar.Name = "qualityBar";
@@ -273,7 +275,7 @@
             // 
             // speedBar
             // 
-            this.speedBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
+            this.speedBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(43)))), ((int)(((byte)(56)))));
             this.speedBar.Location = new System.Drawing.Point(145, 228);
             this.speedBar.Maximum = 100;
             this.speedBar.Name = "speedBar";
@@ -292,7 +294,7 @@
             this.colorsList.FormattingEnabled = true;
             this.colorsList.Location = new System.Drawing.Point(16, 208);
             this.colorsList.Name = "colorsList";
-            this.colorsList.Size = new System.Drawing.Size(92, 119);
+            this.colorsList.Size = new System.Drawing.Size(92, 132);
             this.colorsList.TabIndex = 9;
             // 
             // undoColorButton
@@ -345,7 +347,7 @@
             this.deleteColorsButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(35)))), ((int)(((byte)(50)))));
             this.deleteColorsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.deleteColorsButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(75)))), ((int)(((byte)(100)))));
-            this.deleteColorsButton.Location = new System.Drawing.Point(60, 327);
+            this.deleteColorsButton.Location = new System.Drawing.Point(60, 340);
             this.deleteColorsButton.Name = "deleteColorsButton";
             this.deleteColorsButton.Size = new System.Drawing.Size(48, 21);
             this.deleteColorsButton.TabIndex = 11;
@@ -414,7 +416,7 @@
             this.infoLabel.BackColor = System.Drawing.Color.Transparent;
             this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.infoLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(75)))), ((int)(((byte)(90)))));
-            this.infoLabel.Location = new System.Drawing.Point(32, 417);
+            this.infoLabel.Location = new System.Drawing.Point(32, 428);
             this.infoLabel.Name = "infoLabel";
             this.infoLabel.Size = new System.Drawing.Size(121, 12);
             this.infoLabel.TabIndex = 0;
@@ -460,7 +462,7 @@
             this.colorsLabel.AutoSize = true;
             this.colorsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.colorsLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(205)))), ((int)(((byte)(175)))));
-            this.colorsLabel.Location = new System.Drawing.Point(13, 350);
+            this.colorsLabel.Location = new System.Drawing.Point(13, 361);
             this.colorsLabel.Name = "colorsLabel";
             this.colorsLabel.Size = new System.Drawing.Size(41, 12);
             this.colorsLabel.TabIndex = 0;
@@ -508,7 +510,7 @@
             this.sidebarPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(50)))), ((int)(((byte)(75)))));
             this.sidebarPanel.Location = new System.Drawing.Point(-4, -4);
             this.sidebarPanel.Name = "sidebarPanel";
-            this.sidebarPanel.Size = new System.Drawing.Size(7, 443);
+            this.sidebarPanel.Size = new System.Drawing.Size(7, 452);
             this.sidebarPanel.TabIndex = 0;
             this.sidebarPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.sidebarPanel_MouseDown);
             // 
@@ -522,21 +524,36 @@
             this.algorithmComboBox.Items.AddRange(new object[] {
             "Strips (quality)",
             "Blobs (fast)"});
-            this.algorithmComboBox.Location = new System.Drawing.Point(108, 327);
+            this.algorithmComboBox.Location = new System.Drawing.Point(108, 340);
             this.algorithmComboBox.Name = "algorithmComboBox";
             this.algorithmComboBox.Size = new System.Drawing.Size(67, 20);
-            this.algorithmComboBox.TabIndex = 16;
+            this.algorithmComboBox.TabIndex = 17;
             // 
             // algorithmLabel
             // 
             this.algorithmLabel.AutoSize = true;
             this.algorithmLabel.BackColor = System.Drawing.Color.Transparent;
             this.algorithmLabel.ForeColor = System.Drawing.Color.White;
-            this.algorithmLabel.Location = new System.Drawing.Point(108, 314);
+            this.algorithmLabel.Location = new System.Drawing.Point(108, 327);
             this.algorithmLabel.Name = "algorithmLabel";
             this.algorithmLabel.Size = new System.Drawing.Size(71, 13);
             this.algorithmLabel.TabIndex = 0;
             this.algorithmLabel.Text = "Draw Method";
+            // 
+            // luminanceFixCheckBox
+            // 
+            this.luminanceFixCheckBox.AutoSize = true;
+            this.luminanceFixCheckBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(43)))), ((int)(((byte)(56)))));
+            this.luminanceFixCheckBox.Checked = true;
+            this.luminanceFixCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.luminanceFixCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
+            this.luminanceFixCheckBox.Location = new System.Drawing.Point(112, 312);
+            this.luminanceFixCheckBox.Name = "luminanceFixCheckBox";
+            this.luminanceFixCheckBox.Size = new System.Drawing.Size(68, 17);
+            this.luminanceFixCheckBox.TabIndex = 16;
+            this.luminanceFixCheckBox.Text = "Fix Luma";
+            this.luminanceFixCheckBox.UseVisualStyleBackColor = false;
+            this.luminanceFixCheckBox.CheckedChanged += new System.EventHandler(this.luminanceFixCheckBox_CheckedChanged_1);
             // 
             // program
             // 
@@ -545,7 +562,8 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.BackgroundImage = global::DrawBot.Properties.Resources.background_gradient;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(188, 433);
+            this.ClientSize = new System.Drawing.Size(188, 446);
+            this.Controls.Add(this.luminanceFixCheckBox);
             this.Controls.Add(this.algorithmLabel);
             this.Controls.Add(this.algorithmComboBox);
             this.Controls.Add(this.sidebarPanel);
@@ -640,6 +658,7 @@
         private System.Windows.Forms.Label titlebarLabel;
         private System.Windows.Forms.ComboBox algorithmComboBox;
         private System.Windows.Forms.Label algorithmLabel;
+        private System.Windows.Forms.CheckBox luminanceFixCheckBox;
     }
 }
 

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using static System.Windows.Forms.Keys;
 
 namespace DrawBot
 {
@@ -35,6 +36,12 @@ namespace DrawBot
         // 0x1B = esc
         private bool keyDetect(int key)
         {
+            /*Keys keyCode = (Keys)Enum.Parse(typeof(Keys), "Escape");
+            KeysConverter converter = new KeysConverter();
+            Keys key = (Keys)converter.ConvertFrom(keyCode.ToString());
+            string hexValue = ((int)key).ToString("X2");
+            MessageBox.Show("Key: " + keyCode.ToString() + " | Keycode: 0x" + hexValue);*/
+
             short keyState = GetAsyncKeyState(key);
             bool keyPressed = ((keyState >> 15) & 0x0001) == 0x0001;
 
@@ -44,7 +51,12 @@ namespace DrawBot
             return false;
         }
 
-        const string version = "v2.0.0";
+        const string version = "v2.1.0";
+
+        public struct colorInfo
+        {
+            public int x, y, r, g, b;
+        }
 
         // region
         int x_region_start = 0;
@@ -52,15 +64,18 @@ namespace DrawBot
         int x_region_end = 0;
         int y_region_end = 0;
 
+        // color correction
+        const double r_luma_fix = 0.299;
+        const double g_luma_fix = 0.587;
+        const double b_luma_fix = 0.114;
+        double r_luma = r_luma_fix;
+        double g_luma = g_luma_fix;
+        double b_luma = b_luma_fix;
+
         // preset creator
         string colorsTemp = "";
         int colorsIndex = 0;
         bool hasSavedPalette = false;
-
-        public struct colorInfo
-        {
-            public int x, y, r, g, b;
-        }
 
         // palette storage
         public colorInfo[] colorPalette { get; set; }
@@ -119,7 +134,7 @@ namespace DrawBot
 
             TopMost = true;
 
-            int quality_step = 500 / (Int32.Parse(qualityBox.Text) + 1);
+            int quality_step = 200 / Int32.Parse(qualityBox.Text);
             double speed = 0.1 / double.Parse(speedBox.Text);
 
             int x_bound = (x_region_end - x_region_start) / quality_step;
@@ -185,7 +200,16 @@ namespace DrawBot
             for (int i = 0; i < area; i++)
             {
                 // abort draw
-                if (keyDetect(0x1B) == true) return 1;
+                if (keyDetect(0x1B) == true)
+                {
+                    int x_pause_temp = Cursor.Position.X;
+                    int y_pause_temp = Cursor.Position.Y;
+
+                    DialogResult prompt = MessageBox.Show("Drawing paused.\n\nPress OK to continue\nPress CANCEL to abort", "", MessageBoxButtons.OKCancel);
+                    if (prompt == DialogResult.Cancel) return 1;
+
+                    moveCursor(x_pause_temp, y_pause_temp);
+                }
 
                 // calculate future color
                 Color colorNext = new Color();
@@ -334,7 +358,16 @@ namespace DrawBot
                 for (int i = 0; i < area; i++)
                 {
                     // abort draw
-                    if (keyDetect(0x1B) == true) return 1;
+                    if (keyDetect(0x1B) == true)
+                    {
+                        int x_pause_temp = Cursor.Position.X;
+                        int y_pause_temp = Cursor.Position.Y;
+
+                        DialogResult prompt = MessageBox.Show("Drawing paused.\n\nPress OK to continue\nPress CANCEL to abort", "", MessageBoxButtons.OKCancel);
+                        if (prompt == DialogResult.Cancel) return 1;
+
+                        moveCursor(x_pause_temp, y_pause_temp);
+                    }
 
                     // calculate new line
                     if (x_index == x_bound)
@@ -372,9 +405,9 @@ namespace DrawBot
         {
             return (int)Math.Sqrt
             (
-                Math.Pow(r1 - r2, 2) +
-                Math.Pow(g1 - g2, 2) +
-                Math.Pow(b1 - b2, 2)
+                r_luma * Math.Pow(r1 - r2, 2) +
+                g_luma * Math.Pow(g1 - g2, 2) +
+                b_luma * Math.Pow(b1 - b2, 2)
             );
         }
         private void moveCursor(int x, int y)
@@ -472,8 +505,11 @@ namespace DrawBot
         {
             if (colorsTemp == "") return;
 
-            colorsTemp = colorsTemp.Remove(colorsTemp.LastIndexOf('|'));
             colorsIndex--;
+            if (colorsIndex == 0)
+                colorsTemp = "";
+            else
+                colorsTemp = colorsTemp.Remove(colorsTemp.LastIndexOf('|'));
 
             colorIndexLabel.Text = "Color " + colorsIndex;
             colorLabel.Text = "(0, 0, 0)";
@@ -558,6 +594,22 @@ namespace DrawBot
         private void speedBar_Scroll(object sender, EventArgs e)
         {
             speedBox.Text = speedBar.Value.ToString();
+        }
+
+        private void luminanceFixCheckBox_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (luminanceFixCheckBox.Checked == true)
+            {
+                r_luma = r_luma_fix;
+                g_luma = g_luma_fix;
+                b_luma = b_luma_fix;
+            }
+            else
+            {
+                r_luma = 1.0;
+                g_luma = 1.0;
+                b_luma = 1.0;
+            }
         }
 
         private void program_MouseEnter(object sender, EventArgs e)

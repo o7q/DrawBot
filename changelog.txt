@@ -1,3 +1,9 @@
+~ v2.1.0.0
+- Increased max drawing quality at the cost of speed (100 is now equivalent to around 200)
+- Added option to fix color luminance
+- Added pause feature
+- Minor bug fixes
+
 ~ v2.0.0.0
 - Greatly improved the efficiency of the drawing and color matching algorithms
 - New UI Look
