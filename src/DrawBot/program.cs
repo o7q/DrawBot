@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using static System.Windows.Forms.Keys;
 
 namespace DrawBot
 {
@@ -34,15 +33,13 @@ namespace DrawBot
         private static extern short GetAsyncKeyState(int vKey);
         // 0x01 = leftmouse
         // 0x1B = esc
-        private bool keyDetect(int key)
+        private bool keyDetect(string key)
         {
-            /*Keys keyCode = (Keys)Enum.Parse(typeof(Keys), "Escape");
-            KeysConverter converter = new KeysConverter();
-            Keys key = (Keys)converter.ConvertFrom(keyCode.ToString());
-            string hexValue = ((int)key).ToString("X2");
-            MessageBox.Show("Key: " + keyCode.ToString() + " | Keycode: 0x" + hexValue);*/
+            int keyInt = 0x00;
+            if (key == "LeftMouse") keyInt = 0x01;
+            if (key == "Escape") keyInt = 0x1B;
 
-            short keyState = GetAsyncKeyState(key);
+            short keyState = GetAsyncKeyState(keyInt);
             bool keyPressed = ((keyState >> 15) & 0x0001) == 0x0001;
 
             if (keyPressed)
@@ -64,7 +61,7 @@ namespace DrawBot
         int x_region_end = 0;
         int y_region_end = 0;
 
-        // color correction
+        // luminance correction
         const double r_luma_fix = 0.299;
         const double g_luma_fix = 0.587;
         const double b_luma_fix = 0.114;
@@ -89,19 +86,19 @@ namespace DrawBot
         public program()
         {
             InitializeComponent();
+        }
 
+        private void program_Load(object sender, EventArgs e)
+        {
             // default labels
             titlebarLabel.Text = "DrawBot " + version;
             infoLabel.Text = "DrawBot " + version + " by o7q";
             imageLabel.Text = "";
             colorsLabel.Text = "";
-            
+
             // select default algorithm
             algorithmComboBox.SelectedIndex = 1;
-        }
 
-        private void program_Load(object sender, EventArgs e)
-        {
             Directory.CreateDirectory("DrawBot\\presets");
             refreshColorsList();
         }
@@ -200,12 +197,12 @@ namespace DrawBot
             for (int i = 0; i < area; i++)
             {
                 // abort draw
-                if (keyDetect(0x1B) == true)
+                if (keyDetect("Escape") == true)
                 {
                     int x_pause_temp = Cursor.Position.X;
                     int y_pause_temp = Cursor.Position.Y;
 
-                    DialogResult prompt = MessageBox.Show("Drawing paused.\n\nPress OK to continue\nPress CANCEL to abort", "", MessageBoxButtons.OKCancel);
+                    DialogResult prompt = MessageBox.Show("Drawing paused.\n\nPress OK to resume\nPress CANCEL to stop", "", MessageBoxButtons.OKCancel);
                     if (prompt == DialogResult.Cancel) return 1;
 
                     moveCursor(x_pause_temp, y_pause_temp);
@@ -344,8 +341,10 @@ namespace DrawBot
             int colorIndex = 0;
             int[,] pixelIndex = new int[x_bound, y_bound];
 
+            // for every color scan the entire area
             for (int j = 0; j < paletteAmount; j++)
             {
+                // select color at index with position (x, y)
                 moveCursor(colorPalette[colorIndex].x, colorPalette[colorIndex].y);
                 clickCursor(speed);
 
@@ -355,21 +354,22 @@ namespace DrawBot
                 int mouseX_pos = x_region_start;
                 int mouseY_pos = y_region_start;
 
+                // draw with selected color
                 for (int i = 0; i < area; i++)
                 {
                     // abort draw
-                    if (keyDetect(0x1B) == true)
+                    if (keyDetect("Escape") == true)
                     {
                         int x_pause_temp = Cursor.Position.X;
                         int y_pause_temp = Cursor.Position.Y;
 
-                        DialogResult prompt = MessageBox.Show("Drawing paused.\n\nPress OK to continue\nPress CANCEL to abort", "", MessageBoxButtons.OKCancel);
+                        DialogResult prompt = MessageBox.Show("Drawing paused.\n\nPress OK to resume\nPress CANCEL to stop", "", MessageBoxButtons.OKCancel);
                         if (prompt == DialogResult.Cancel) return 1;
 
                         moveCursor(x_pause_temp, y_pause_temp);
                     }
 
-                    // calculate new line
+                    // calculate new line (like a typewriter resetting)
                     if (x_index == x_bound)
                     {
                         mouseX_pos = mouseX_pos - x_bound * quality_step;
@@ -379,22 +379,27 @@ namespace DrawBot
                         y_index++;
                     }
 
+                    // getting the color of the pixel at (x, y)
                     Color color = image.GetPixel(x_index, y_index);
                     int dist = getDist(color.R, colorPalette[colorIndex].r, color.G, colorPalette[colorIndex].g, color.B, colorPalette[colorIndex].b);
 
-                    // place blob pixel
+                    // place blob pixel if not already
                     if (dist == quantizedImage[x_index, y_index] && pixelIndex[x_index, y_index] == 0)
                     {
+                        // placing pixel
                         moveCursor(mouseX_pos, mouseY_pos);
                         clickCursor(speed);
 
+                        // set pixel to already placed
                         pixelIndex[x_index, y_index] = 1;
                     }
 
+                    // prepare for next pixel
                     mouseX_pos += quality_step;
                     x_index++;
                 }
 
+                // cycling through palette colors
                 colorIndex++;
             }
 
@@ -432,7 +437,7 @@ namespace DrawBot
 
         private void loadImageButton_Click(object sender, EventArgs e)
         {
-            openImageDialog.Filter = "PNG|*.png|JPG|*.jpg|All files (*.*)|*.*";
+            openImageDialog.Filter = "All files (*.*)|*.*|PNG|*.png|JPG|*.jpg";
             if (openImageDialog.ShowDialog() == DialogResult.OK)
             {
                 imagePath = openImageDialog.FileName;
@@ -455,7 +460,7 @@ namespace DrawBot
         private void regionStartButton_Click(object sender, EventArgs e)
         {
             TopMost = true;
-            while (keyDetect(0x01) == false) { }
+            while (keyDetect("LeftMouse") == false) { }
 
             x_region_start = Cursor.Position.X;
             y_region_start = Cursor.Position.Y;
@@ -466,7 +471,7 @@ namespace DrawBot
         private void regionEndButton_Click(object sender, EventArgs e)
         {
             TopMost = true;
-            while (keyDetect(0x01) == false) { }
+            while (keyDetect("LeftMouse") == false) { }
 
             x_region_end = Cursor.Position.X;
             y_region_end = Cursor.Position.Y;
@@ -488,7 +493,7 @@ namespace DrawBot
             }
 
             TopMost = true;
-            while (keyDetect(0x01) == false) { }
+            while (keyDetect("LeftMouse") == false) { }
 
             int x = Cursor.Position.X;
             int y = Cursor.Position.Y;
@@ -538,6 +543,8 @@ namespace DrawBot
             string[] RGBpixel = paletteFile.Split('|');
             paletteAmount = RGBpixel.Length;
             colorPalette = new colorInfo[paletteFile.Length];
+
+            // load xyrgb data into palette
             for (int i = 0; i < RGBpixel.Length; i++)
             {
                 string[] value = RGBpixel[i].Split(',');
