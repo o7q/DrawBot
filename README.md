@@ -46,7 +46,7 @@ While drawing, you can push the **ESCAPE** key to abort the drawing process.
 
 - To create a preset
     - Note: *The preset system will save all colors that you select, click "Save" only when you've selected all of the colors you wanted for that preset.
-    - **3.1** Click the **Add Color Button** and then click on a color on the visible color palette of the program/game
+    - **3.1** Click the **Add Color Button (+)** and then click on a color on the visible color palette of the program/game
     - **3.2** Repeat step **3.1** until you have selected all of the colors you need (note: it does not matter in which order you select them, the program will automatically determine which color to use when drawing, also, you can click the **Reset Button** to restart the preset creation process)
     - **3.3** Name the preset by typing a name inside the textbox, click the **Save Button** to save it
 - To load a preset
